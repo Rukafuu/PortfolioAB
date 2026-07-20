@@ -318,11 +318,18 @@ export default function Home() {
     const updateDreamState = () => setLiraDreaming(new Date().getHours() === 3);
     const dreamTimer = window.setTimeout(updateDreamState, 0);
     const dreamClock = window.setInterval(updateDreamState, 60_000);
-    const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    const konami = ["arrowup", "arrowup", "arrowdown", "arrowdown", "arrowleft", "arrowright", "arrowleft", "arrowright", "keyb", "keya"];
     let progress = 0;
     const listenForKonami = (event: globalThis.KeyboardEvent) => {
-      progress = event.key.toLowerCase() === konami[progress].toLowerCase() ? progress + 1 : 0;
+      if (event.repeat) return;
+      const key = event.code.toLowerCase();
+      progress = key === konami[progress]
+        ? progress + 1
+        : key === konami[0]
+          ? 1
+          : 0;
       if (progress === konami.length) {
+        event.preventDefault();
         setFoxMode(true);
         setTerminalOpen(true);
         setTerminalLines((lines) => [...lines, "LIRA_OVERRIDE — você encontrou a rota da raposa.", "o terminal é meu por alguns segundos. comportem-se."]);
