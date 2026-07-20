@@ -21,5 +21,6 @@ test("keeps mobile overlays and controls inside iPhone safe areas", async () => 
   assert.match(css, /max-height:\s*calc\(100dvh - 20px\)/);
   assert.match(css, /\.terminal-output input\s*\{\s*font-size:\s*16px/);
   assert.match(css, /\.back-actions\s*\{\s*flex-direction:\s*column/);
+  assert.match(css, /min-height:\s*max\(1320px, calc\(100svh \+ 440px\)\)/);
   assert.match(css, /touch-action:\s*manipulation/);
 });

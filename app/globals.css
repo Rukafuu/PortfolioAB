@@ -1046,7 +1046,7 @@ footer button { border: 0; background: none; cursor: pointer; color: var(--acid)
   .mini-tracks { grid-template-columns: 1fr; }
   .mini-tracks button { min-height: 79px; border-left: 0; border-bottom: 1px solid rgba(242,235,221,.35); }
   .mini-tracks b { font-size: 1.8rem; }
-  .cassette-scene { min-height: 1170px; }
+  .cassette-scene { min-height: max(1280px, calc(100svh + 420px)); }
   .back-grid { padding: 60px 34px; gap: 22px; }
   .back-grid h2 { font-size: 3.7rem; }
   .back-reels { padding: 28px 18px; gap: 14px; }
@@ -1092,6 +1092,7 @@ footer button { border: 0; background: none; cursor: pointer; color: var(--acid)
   .wordmark { max-width: 94px; line-height: 1.1; text-align: left; }
   .side-selector button { min-height: 34px; padding: 0 5px; font-size: .42rem; }
   .language { font-size: .58rem; }
+  .cassette-scene { min-height: max(1320px, calc(100svh + 440px)); }
   .machine-controls button { font-size: .5rem; letter-spacing: .025em; }
   .cassette-code { padding: 0 27px; }
   .back-grid { padding: 52px 24px; }
