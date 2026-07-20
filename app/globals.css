@@ -8,6 +8,8 @@
   --coral: #ff4f73;
   --muted: #8d8b83;
   --rule: #3a3933;
+  --font-geist-sans: Arial, "Helvetica Neue", sans-serif;
+  --font-geist-mono: Consolas, "Courier New", monospace;
 }
 
 * {
