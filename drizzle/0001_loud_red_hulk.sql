@@ -1,0 +1,1 @@
+CREATE INDEX `lira_transmissions_session_idx` ON `lira_transmissions` (`session_id`,`created_at`);
