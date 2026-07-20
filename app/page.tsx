@@ -336,7 +336,6 @@ export default function Home() {
   };
 
   const changeSide = (side: "dev" | "artist") => {
-    if (side === "dev") soundCloudWidgetRef.current?.pause();
     setFlipped(side === "artist");
     window.setTimeout(() => scrollTo("top"), 40);
   };
@@ -360,7 +359,6 @@ export default function Home() {
     let destinationSide: "dev" | "artist" | null = null;
 
     const playRequestedTrack = () => {
-      setFlipped(true);
       const query = values.join(" ");
       if (!query) {
         soundCloudWidgetRef.current?.play();
@@ -420,7 +418,6 @@ export default function Home() {
         output.push("SOUNDCLOUD ↗ soundcloud.com/rukafuu");
         break;
       case "flip":
-        if (flipped) soundCloudWidgetRef.current?.pause();
         setFlipped(!flipped);
         output.push(language === "pt" ? "Virando a fita: DEV ↔ ARTISTA…" : "Flipping tape: DEV ↔ ARTIST…");
         break;
@@ -468,7 +465,6 @@ export default function Home() {
         } else output.push(language === "pt" ? "Opção inválida. Digite music para ver o menu." : "Invalid option. Type music to see the menu.");
         break;
       case "play":
-        setFlipped(true);
         soundCloudWidgetRef.current?.play();
         output.push(`PLAY — ${currentTrack[1]}`);
         break;
@@ -477,12 +473,10 @@ export default function Home() {
         output.push(`PAUSE — ${currentTrack[1]}`);
         break;
       case "next":
-        setFlipped(true);
         stepTrack(1);
         output.push(`NEXT — ${musicTracks[(activeTrack + 1) % musicTracks.length][1]}`);
         break;
       case "prev":
-        setFlipped(true);
         stepTrack(-1);
         output.push(`PREV — ${musicTracks[(activeTrack - 1 + musicTracks.length) % musicTracks.length][1]}`);
         break;
@@ -509,7 +503,6 @@ export default function Home() {
     ]);
     setTerminalInput("");
     if (destination) {
-      if (destinationSide === "dev") soundCloudWidgetRef.current?.pause();
       if (destinationSide) setFlipped(destinationSide === "artist");
       setTerminalOpen(false);
       window.setTimeout(() => scrollTo(destination as string), 220);
@@ -595,10 +588,15 @@ export default function Home() {
               <div className="tape-machine dev-machine">
                 <div className="machine-bar">
                   <span>SIDE A / DEV SYSTEM</span>
-                  <span className="signal-lights"><i /><i /><i /></span>
+                  <span className="machine-now-playing">{playing ? `▶ ${musicTracks[activeTrack][1]}` : "AUDIO READY"}</span>
                 </div>
                 <div className="animated-cassette-stage dev-cassette-stage">
-                  <AnimatedCassette title={language === "pt" ? "SISTEMAS VIVOS" : "LIVING SYSTEMS"} playing={false} rewinding={false} side="A" />
+                  <AnimatedCassette title={playing ? musicTracks[activeTrack][1] : (language === "pt" ? "SISTEMAS VIVOS" : "LIVING SYSTEMS")} playing={playing} rewinding={rewinding} side="A" />
+                  <div className="dev-audio-transport" aria-label={language === "pt" ? "Controles de música no lado A" : "Side A music controls"}>
+                    <button onClick={() => stepTrack(-1)} aria-label="Faixa anterior">≪</button>
+                    <button className="dev-play-button" onClick={togglePlayback}>{playing ? "Ⅱ PAUSE" : "▶ PLAY"}</button>
+                    <button onClick={() => stepTrack(1)} aria-label="Próxima faixa">≫</button>
+                  </div>
                 </div>
                 <div className="machine-controls">
                   <button onClick={() => scrollTo("projects")}>01 PROJECTS</button>

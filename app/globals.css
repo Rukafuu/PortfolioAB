@@ -361,6 +361,46 @@ input:focus-visible {
   border-bottom: 1px solid var(--ink);
 }
 
+.machine-now-playing {
+  max-width: 52%;
+  overflow: hidden;
+  color: var(--coral);
+  font-size: .56rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dev-cassette-stage { isolation: isolate; }
+
+.dev-audio-transport {
+  position: absolute;
+  z-index: 2;
+  right: 14px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: 38px minmax(82px, 1fr) 38px;
+  overflow: hidden;
+  border: 1px solid rgba(242,235,221,.72);
+  background: rgba(11,11,10,.88);
+  box-shadow: 4px 4px 0 rgba(0,0,0,.36);
+}
+
+.dev-audio-transport button {
+  min-height: 32px;
+  padding: 0 9px;
+  border: 0;
+  border-right: 1px solid rgba(242,235,221,.35);
+  background: transparent;
+  color: var(--paper);
+  font-size: .52rem;
+  font-weight: 800;
+  letter-spacing: .07em;
+  cursor: pointer;
+}
+
+.dev-audio-transport button:last-child { border-right: 0; }
+.dev-audio-transport button:hover, .dev-audio-transport .dev-play-button { background: var(--acid); color: var(--ink); }
+
 .signal-lights {
   display: flex;
   gap: 8px;
@@ -998,6 +1038,7 @@ footer button { border: 0; background: none; cursor: pointer; color: var(--acid)
   .button { width: 100%; }
   .tape-machine { height: calc(100% - 20px); margin: 10px; min-height: 340px; grid-template-rows: 42px minmax(0, 1fr) 48px; }
   .animated-cassette-stage { min-height: 0; padding: 8px 7px 4px; }
+  .dev-audio-transport { right: 9px; bottom: 9px; grid-template-columns: 34px minmax(76px, 1fr) 34px; }
   .reel-deck { padding: 13px 10px; gap: 9px; }
   .reel-wrap { box-shadow: 0 0 0 3px #080807, 0 0 0 4px #4d4b44; }
   .reel { border-width: 4px; }
