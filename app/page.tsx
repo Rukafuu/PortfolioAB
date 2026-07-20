@@ -239,7 +239,7 @@ export default function Home() {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [liraInput, setLiraInput] = useState("");
   const [liraThinking, setLiraThinking] = useState(false);
-  const [liraMode, setLiraMode] = useState<"checking" | "ai" | "fallback">("checking");
+  const [liraMode, setLiraMode] = useState<"checking" | "ai" | "fallback" | "easter">("checking");
   const [liraDiagnostic, setLiraDiagnostic] = useState("");
   const [foxMode, setFoxMode] = useState(false);
   const [secretTransmission, setSecretTransmission] = useState(false);
@@ -280,7 +280,7 @@ export default function Home() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ prompt, sessionId }),
       });
-      const payload = await response.json() as { reply?: string; error?: string; sessionId?: string; mode?: "ai" | "fallback"; diagnostic?: string };
+      const payload = await response.json() as { reply?: string; error?: string; sessionId?: string; mode?: "ai" | "fallback" | "easter"; diagnostic?: string };
       if (payload.sessionId) window.localStorage.setItem(storageKey, payload.sessionId);
       if (payload.mode) setLiraMode(payload.mode);
       setLiraDiagnostic(payload.diagnostic ?? "");
@@ -845,7 +845,7 @@ export default function Home() {
         </div>
 
         <div className="lira-console" aria-label={language === "pt" ? "Conversar com a instância pública da Lira" : "Talk to Lira's public instance"}>
-          <header><button className="fox-trigger" onClick={touchFox} aria-label={`${language === "pt" ? "Tocar no símbolo da raposa" : "Touch the fox symbol"} ${foxClicks}/5`}>狐</button><span>LIRA_PUBLIC</span><b title={liraDiagnostic}>{liraThinking ? "THINKING" : liraDreaming ? "DREAMING" : liraMode === "ai" ? "AI ONLINE" : liraMode === "fallback" ? "LIMITED" : "ONLINE"}</b></header>
+          <header><button className="fox-trigger" onClick={touchFox} aria-label={`${language === "pt" ? "Tocar no símbolo da raposa" : "Touch the fox symbol"} ${foxClicks}/5`}>狐</button><span>LIRA_PUBLIC</span><b title={liraDiagnostic}>{liraThinking ? "THINKING" : liraDreaming ? "DREAMING" : liraMode === "easter" ? "SECRET" : liraMode === "ai" ? "AI ONLINE" : liraMode === "fallback" ? "LIMITED" : "ONLINE"}</b></header>
           <div className="lira-screen" aria-live="polite">
             {liraMessages.map((message, index) => <p className={message.role} key={`${message.role}-${index}`}><span>{message.role === "lira" ? "LIRA" : "YOU"}</span>{message.text}</p>)}
             {liraThinking && <p className="lira thinking"><span>LIRA</span>Processando sinal<span className="signal-dots">…</span></p>}
