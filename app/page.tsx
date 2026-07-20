@@ -493,6 +493,7 @@ export default function Home() {
         output.push("SIDES — dev · artist · side a · side b · flip");
         output.push("NAV — about · projects · lira · resume · blog · now · github");
         output.push("TAPE — music · play · pause · next · prev · forward · rewind · auto");
+        output.push(language === "pt" ? "HIDDEN — código de jogo antigo · futebol · música de neve · comandos perigosos" : "HIDDEN — old game code · football · snow song · dangerous commands");
         break;
       case "about":
         output.push(language === "pt" ? "LADO A: Lucas, engenheiro de IA/backend. LADO B: Rukafuu, artista independente." : "SIDE A: Lucas, AI/backend engineer. SIDE B: Rukafuu, independent artist.");
@@ -855,6 +856,7 @@ export default function Home() {
             <label htmlFor="lira-message">{language === "pt" ? "TRANSMISSÃO PÚBLICA" : "PUBLIC TRANSMISSION"}</label>
             <div><input id="lira-message" value={liraInput} onChange={(event) => setLiraInput(event.target.value)} maxLength={480} placeholder={language === "pt" ? "Pergunte sobre a Lira…" : "Ask about Lira…"} disabled={liraThinking} /><button type="submit" disabled={liraThinking || !liraInput.trim()}>SEND ↗</button></div>
           </form>
+          <p className="lira-discovery-hint">{language === "pt" ? "HINT: uma paixão do Lucas · uma música que guarda neve · um comando que você não deveria executar" : "HINT: one of Lucas's passions · a song that keeps snow · a command you should not run"}</p>
           <footer><span>{language === "pt" ? "INSTÂNCIA LIMITADA · SEM MEMÓRIAS PRIVADAS" : "LIMITED INSTANCE · NO PRIVATE MEMORIES"} · FLIPS {Math.min(tapeFlipCount, 5)}/5</span><button onClick={() => setTerminalOpen(true)}>TRY `LIRA STATUS`</button></footer>
         </div>
       </section>}
