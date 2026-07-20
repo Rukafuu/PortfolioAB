@@ -82,6 +82,7 @@ export async function POST(request: NextRequest) {
 
   let reply = fallbackReply(prompt);
   let mode: "ai" | "fallback" = "fallback";
+  let diagnostic = ai ? "ai-run-failed" : "ai-binding-missing";
 
   if (ai) {
     try {
@@ -96,9 +97,11 @@ export async function POST(request: NextRequest) {
       if (result.response?.trim()) {
         reply = result.response.trim();
         mode = "ai";
+        diagnostic = "ok";
       }
-    } catch {
+    } catch (error) {
       mode = "fallback";
+      diagnostic = error instanceof Error ? error.message.slice(0, 180) : "unknown-ai-error";
     }
   }
 
@@ -107,6 +110,5 @@ export async function POST(request: NextRequest) {
       .bind(sessionId, prompt, reply, mode, Date.now()).run();
   }
 
-  return NextResponse.json({ reply, sessionId, mode });
+  return NextResponse.json({ reply, sessionId, mode, diagnostic });
 }
-
