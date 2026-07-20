@@ -965,7 +965,10 @@ export default function Home() {
                   id="terminal-command"
                   value={terminalInput}
                   onChange={(event) => setTerminalInput(event.target.value)}
+                  onFocus={() => window.setTimeout(() => inputRef.current?.scrollIntoView({ block: "center" }), 250)}
                   autoComplete="off"
+                  autoCapitalize="none"
+                  enterKeyHint="send"
                   spellCheck={false}
                 />
               </form>
