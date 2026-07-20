@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
 
   let reply = fallbackReply(prompt);
   let mode: "ai" | "fallback" = "fallback";
-  let diagnostic = ai ? "ai-run-failed" : "ai-binding-missing";
+  let diagnostic = ai\n    ? "ai-run-failed"\n    : `ai-binding-missing:${Object.keys(env).sort().join(",") || "no-bindings"}`;
 
   if (ai) {
     try {
