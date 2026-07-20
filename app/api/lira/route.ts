@@ -4,7 +4,11 @@ type LiraEnv = {
   AI?: {
     run: (model: string, input: Record<string, unknown>) => Promise<unknown>;
   };
+  Lira?: {
+    run: (model: string, input: Record<string, unknown>) => Promise<unknown>;
+  };
   DB?: D1Database;
+  dblira?: D1Database;
 };
 
 const MODEL = "@cf/meta/llama-3.2-3b-instruct";
@@ -64,10 +68,12 @@ export async function POST(request: NextRequest) {
   }
 
   const env = await getEnv();
-  if (env.DB) {
-    await ensureStorage(env.DB);
+  const db = env.DB ?? env.dblira;
+  const ai = env.AI ?? env.Lira;
+  if (db) {
+    await ensureStorage(db);
     const since = Date.now() - 86_400_000;
-    const count = await env.DB.prepare("SELECT COUNT(*) AS total FROM lira_transmissions WHERE session_id = ? AND created_at >= ?")
+    const count = await db.prepare("SELECT COUNT(*) AS total FROM lira_transmissions WHERE session_id = ? AND created_at >= ?")
       .bind(sessionId, since).first<{ total: number }>();
     if ((count?.total ?? 0) >= MAX_DAILY_MESSAGES) {
       return NextResponse.json({ error: "O sinal da Lira precisa descansar. Tente novamente amanhã." }, { status: 429 });
@@ -77,9 +83,9 @@ export async function POST(request: NextRequest) {
   let reply = fallbackReply(prompt);
   let mode: "ai" | "fallback" = "fallback";
 
-  if (env.AI) {
+  if (ai) {
     try {
-      const result = await env.AI.run(MODEL, {
+      const result = await ai.run(MODEL, {
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: prompt },
@@ -96,8 +102,8 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  if (env.DB) {
-    await env.DB.prepare("INSERT INTO lira_transmissions (session_id, prompt, response, status, created_at) VALUES (?, ?, ?, ?, ?)")
+  if (db) {
+    await db.prepare("INSERT INTO lira_transmissions (session_id, prompt, response, status, created_at) VALUES (?, ?, ?, ?, ?)")
       .bind(sessionId, prompt, reply, mode, Date.now()).run();
   }
 
