@@ -898,6 +898,7 @@ input:focus-visible {
 .lira-console form > div { display: grid; grid-template-columns: 1fr auto; }
 .lira-console input { min-width: 0; min-height: 52px; padding: 0 15px; border: 1px solid rgba(242,235,221,.5); border-right: 0; outline: 0; background: #10100e; color: var(--paper); font-family: var(--font-geist-mono), monospace; font-size: .78rem; }
 .lira-console input:focus { border-color: var(--acid); }
+.lira-discovery-hint { margin: 0; padding: 10px 20px; border-top: 1px dashed rgba(242,235,221,.22); color: var(--muted); font-size: .48rem; line-height: 1.5; letter-spacing: .07em; text-transform: uppercase; }
 .lira-console form button { min-width: 100px; border: 0; background: var(--acid); color: var(--ink); font-size: .61rem; font-weight: 900; cursor: pointer; }
 .lira-console form button:disabled { cursor: not-allowed; opacity: .48; }
 .lira-console > footer { min-height: 48px; display: flex; grid-template-columns: none; justify-content: space-between; gap: 15px; padding: 12px 20px; border-top: 1px solid rgba(242,235,221,.3); color: #8d8a82; font-size: .48rem; letter-spacing: .08em; }
