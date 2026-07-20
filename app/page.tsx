@@ -210,7 +210,7 @@ function AnimatedCassette({ title, playing, rewinding, side = "B" }: { title: st
         <rect x="315" y="190" width="180" height="90" rx="7" fill="#0b0b0a" stroke="#8d8b83" />
         <text x="405" y="222" textAnchor="middle" fill="#c7ff3a" fontSize="13" fontFamily="monospace">{devSide ? "LUCAS // DEV SYSTEM" : "RUKAFUU // NOW PLAYING"}</text>
         <text x="405" y="250" textAnchor="middle" fill="#f2ebdd" fontSize="18" fontWeight="800" fontFamily="sans-serif">{title.toUpperCase()}</text>
-        <text x="405" y="272" textAnchor="middle" fill="#ff4f73" fontSize="11" fontFamily="monospace">{devSide ? "● BUILD IN PROGRESS" : rewinding ? "≪ REWINDING" : playing ? "▶ TAPE IN MOTION" : "Ⅱ TAPE PAUSED"}</text>
+        <text x="405" y="272" textAnchor="middle" fill="#ff4f73" fontSize="11" fontFamily="monospace">{devSide ? "BUILD IN PROGRESS" : rewinding ? "REWINDING" : playing ? "TAPE IN MOTION" : "TAPE PAUSED"}</text>
         <text x="72" y="78" fill="#0b0b0a" fontSize="15" fontWeight="900" fontFamily="sans-serif">LUCAS PERSONAL OS</text>
         <text x="738" y="78" textAnchor="end" fill="#0b0b0a" fontSize="13" fontWeight="900" fontFamily="monospace">C-90 / SIDE {side}</text>
         <path d="M174 478L196 397Q198 389 208 389H602Q612 389 614 397L636 478Z" fill="#20201c" stroke="#d9d0bf" strokeWidth="2" />
@@ -455,7 +455,7 @@ export default function Home() {
     const output: string[] = [];
     const currentTrack = musicTracks[activeTrack];
     const nowPlaying = playing
-      ? `▶ ${language === "pt" ? "TOCANDO AGORA" : "NOW PLAYING"}: ${currentTrack[0]} ${currentTrack[1]}`
+      ? `${language === "pt" ? "TOCANDO AGORA" : "NOW PLAYING"}: ${currentTrack[0]} ${currentTrack[1]}`
       : `Ⅱ ${language === "pt" ? "FITA CARREGADA" : "TAPE LOADED"}: ${currentTrack[0]} ${currentTrack[1]}`;
     let destination: string | null = null;
     let destinationSide: "dev" | "artist" | null = null;
@@ -718,7 +718,7 @@ export default function Home() {
                 <p className="hero-subtitle">{t.subtitle}</p>
                 <div className="hero-actions">
                   <button className="button button-primary" onClick={() => scrollTo("projects")}>
-                    <span className="play-symbol">▶</span> {t.explore}
+                    <span className="play-symbol">PLAY</span> {t.explore}
                   </button>
                   <button className="button button-secondary" onClick={() => setTerminalOpen(true)}>
                     <span>&gt;_</span> {t.terminal}
@@ -729,13 +729,13 @@ export default function Home() {
               <div className="tape-machine dev-machine">
                 <div className="machine-bar">
                   <span>SIDE A / DEV SYSTEM</span>
-                  <span className="machine-now-playing">{playing ? `▶ ${musicTracks[activeTrack][1]}` : "AUDIO READY"}</span>
+                  <span className="machine-now-playing">{playing ? `PLAYING ${musicTracks[activeTrack][1]}` : "AUDIO READY"}</span>
                 </div>
                 <div className="animated-cassette-stage dev-cassette-stage">
                   <AnimatedCassette title={playing ? musicTracks[activeTrack][1] : (language === "pt" ? "SISTEMAS VIVOS" : "LIVING SYSTEMS")} playing={playing} rewinding={rewinding} side="A" />
                   <div className="dev-audio-transport" aria-label={language === "pt" ? "Controles de música no lado A" : "Side A music controls"}>
                     <button onClick={() => stepTrack(-1)} aria-label="Faixa anterior">≪</button>
-                    <button className="dev-play-button" onClick={togglePlayback}>{playing ? "Ⅱ PAUSE" : "▶ PLAY"}</button>
+                    <button className="dev-play-button" onClick={togglePlayback}>{playing ? "PAUSE" : "PLAY"}</button>
                     <button onClick={() => stepTrack(1)} aria-label="Próxima faixa">≫</button>
                   </div>
                 </div>
@@ -781,7 +781,7 @@ export default function Home() {
               <p className="back-meta">{t.sideBMeta}</p>
               <div className="back-reels">
                 <AnimatedCassette title={musicTracks[activeTrack][1]} playing={playing} rewinding={rewinding} />
-                <div className="back-transport"><button onClick={() => stepTrack(-1)}>≪</button><button onClick={togglePlayback}>{playing ? "Ⅱ PAUSE" : "▶ PLAY"}</button><button onClick={() => stepTrack(1)}>≫</button><button className={autoAdvance ? "active" : ""} onClick={() => setAutoAdvance((value) => !value)}>AUTO {autoAdvance ? "ON" : "OFF"}</button></div>
+                <div className="back-transport"><button onClick={() => stepTrack(-1)}>PREV</button><button onClick={togglePlayback}>{playing ? "PAUSE" : "PLAY"}</button><button onClick={() => stepTrack(1)}>NEXT</button><button className={autoAdvance ? "active" : ""} onClick={() => setAutoAdvance((value) => !value)}>AUTO {autoAdvance ? "ON" : "OFF"}</button></div>
               </div>
               <div className="back-actions"><button className="button button-primary" onClick={() => scrollTo("music")}>↓ {language === "pt" ? "ABRIR FAIXAS" : "OPEN TRACKS"}</button><button className="button button-secondary" onClick={() => changeSide("dev")}>↶ SIDE A / DEV</button></div>
             </div>
@@ -808,7 +808,7 @@ export default function Home() {
                 <p className="project-description">{project.description[language]}</p>
               </div>
               <div className="project-status">
-                <span><i /> {live ? `GITHUB LIVE · ★ ${live.stargazers_count}` : project.status}</span>
+                <span><i /> {live ? `GITHUB LIVE · STARS ${live.stargazers_count}` : project.status}</span>
                 <a href={live?.html_url ?? project.url} target="_blank" rel="noreferrer">{t.openReel} ↗</a>
               </div>
             </article>
@@ -863,7 +863,7 @@ export default function Home() {
           <div className="deck-sync"><span>CASSETTE SYNCED / AUTO-SEQUENCE {autoAdvance ? "ON" : "OFF"}</span><b>{playing ? "REELS IN MOTION" : "TAPE PAUSED"}</b></div>
           <div className="deck-transport">
             <button onClick={() => stepTrack(-1)}>≪ PREV</button>
-            <button onClick={togglePlayback}>{playing ? "Ⅱ PAUSE" : "▶ PLAY"}</button>
+            <button onClick={togglePlayback}>{playing ? "PAUSE" : "PLAY"}</button>
             <button onClick={() => stepTrack(1)}>NEXT ≫</button>
             <button className={autoAdvance ? "active" : ""} aria-pressed={autoAdvance} onClick={() => setAutoAdvance((value) => !value)}>AUTO {autoAdvance ? "ON" : "OFF"}</button>
             <a href="https://soundcloud.com/rukafuu" target="_blank" rel="noreferrer">SOUNDCLOUD ↗</a>
@@ -946,7 +946,7 @@ export default function Home() {
         >
           <div className="terminal-window">
             <div className="terminal-titlebar">
-              <span>◼ TERMINAL / TAPE DECK</span>
+              <span>TERMINAL / TAPE DECK</span>
               <button onClick={() => setTerminalOpen(false)} aria-label="Fechar terminal">×</button>
             </div>
             <div className="terminal-output" onClick={() => inputRef.current?.focus()}>
