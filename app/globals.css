@@ -1078,7 +1078,7 @@ footer button { border: 0; background: none; cursor: pointer; color: var(--acid)
   .founder-signal { grid-template-columns: 1fr 1.4fr; }
   .founder-links { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
   .lira-console { width: min(720px, 100%); justify-self: center; }
-  .back-grid { grid-template-columns: 1fr; padding: 70px; }
+  .back-grid { grid-template-columns: 1fr; grid-template-rows: auto; align-content: start; padding: 70px; }
   .back-grid h2, .back-description, .back-meta, .back-actions { grid-column: 1; grid-row: auto; }
   .back-reels { grid-column: 1; grid-row: auto; max-width: 560px; }
 }
