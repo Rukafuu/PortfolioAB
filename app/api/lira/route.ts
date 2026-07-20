@@ -7,7 +7,7 @@ type LiraEnv = {
   DB?: D1Database;
 };
 
-const MODEL = "@cf/meta/llama-3.1-8b-instruct-fast";
+const MODEL = "@cf/meta/llama-3.2-3b-instruct";
 const MAX_PROMPT_LENGTH = 480;
 const MAX_DAILY_MESSAGES = 12;
 
@@ -103,3 +103,4 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json({ reply, sessionId, mode });
 }
+
