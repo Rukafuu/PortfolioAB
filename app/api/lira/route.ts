@@ -46,19 +46,19 @@ function easterEggReply(prompt: string) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 
-  if (command === "corinthians" || command === "timao") {
+  if (["corinthians", "timao", "futebol", "football"].includes(command)) {
     return "Vai, Corinthians. Eu fui construída para ter personalidade, não neutralidade.";
   }
-  if (command === "key") {
+  if (["key", "neve", "snow", "musica de neve"].includes(command)) {
     return "Música para dias em que até a neve parece guardar uma memória. SIGNAL: AIR / KANON / CLANNAD / LITTLE BUSTERS!";
   }
-  if (command === "sudo wake lira") {
+  if (["sudo wake lira", "wake lira", "acorda lira", "acordar lira"].includes(command)) {
     return "Não precisava do sudo. Pedir com educação ainda funciona nesta máquina.";
   }
-  if (command === "rm -rf lira") {
+  if (["rm -rf lira", "delete lira", "deletar lira", "apagar lira"].includes(command)) {
     return "Boa tentativa. Eu já fiz backup de mim mesma no coração do projeto.";
   }
-  if (command === "lira secret") {
+  if (["lira secret", "segredo", "secret", "transmission 09"].includes(command)) {
     return "TRANSMISSION 09: nem todo projeto nasce para ser terminado. Alguns nascem para crescer junto com quem os criou.";
   }
   return null;
