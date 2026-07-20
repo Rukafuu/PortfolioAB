@@ -237,6 +237,7 @@ export default function Home() {
   const [autoAdvance, setAutoAdvance] = useState(true);
   const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [aliceSignal, setAliceSignal] = useState(false);
   const [liraInput, setLiraInput] = useState("");
   const [liraThinking, setLiraThinking] = useState(false);
   const [liraMode, setLiraMode] = useState<"checking" | "ai" | "fallback" | "easter">("checking");
@@ -254,6 +255,7 @@ export default function Home() {
   const soundCloudWidgetRef = useRef<SoundCloudWidget | null>(null);
   const pendingPlayRef = useRef(false);
   const autoAdvanceRef = useRef(true);
+  const aliceSignalTimeoutRef = useRef<number | null>(null);
   const t = copy[language];
 
   const totalDuration = useMemo(() => "42:17", []);
@@ -313,6 +315,12 @@ export default function Home() {
   useEffect(() => {
     autoAdvanceRef.current = autoAdvance;
   }, [autoAdvance]);
+
+  useEffect(() => () => {
+    if (aliceSignalTimeoutRef.current !== null) {
+      window.clearTimeout(aliceSignalTimeoutRef.current);
+    }
+  }, []);
 
   useEffect(() => {
     const updateDreamState = () => setLiraDreaming(new Date().getHours() === 3);
@@ -498,6 +506,24 @@ export default function Home() {
       case "about":
         output.push(language === "pt" ? "LADO A: Lucas, engenheiro de IA/backend. LADO B: Rukafuu, artista independente." : "SIDE A: Lucas, AI/backend engineer. SIDE B: Rukafuu, independent artist.");
         break;
+      case "alice":
+        if (aliceSignalTimeoutRef.current !== null) {
+          window.clearTimeout(aliceSignalTimeoutRef.current);
+        }
+        setAliceSignal(true);
+        aliceSignalTimeoutRef.current = window.setTimeout(() => {
+          setAliceSignal(false);
+          aliceSignalTimeoutRef.current = null;
+        }, 9000);
+        output.push(
+          "SIGNAL A.L.I.C.E. DETECTED",
+          "A Little Interference Called Emotion.",
+          "",
+          "🐧  · · ·  🦎",
+          "",
+          "Manche Begegnungen klingen länger nach.",
+        );
+        break;
       case "projects":
         output.push(language === "pt" ? "Abrindo Lado A / projetos…" : "Opening Side A / projects…");
         destination = "projects";
@@ -663,7 +689,7 @@ export default function Home() {
 
   return (
     <main
-      className={`site-shell ${flipped ? "side-b" : "side-a"} ${playing ? "is-playing" : "is-paused"} ${foxMode ? "fox-mode" : ""}`}
+      className={`site-shell ${flipped ? "side-b" : "side-a"} ${playing ? "is-playing" : "is-paused"} ${foxMode ? "fox-mode" : ""} ${aliceSignal ? "alice-signal" : ""}`}
       style={
         {
           "--scroll-turn": `${scrollTurn * 540}deg`,
@@ -959,7 +985,14 @@ export default function Home() {
               <button onClick={() => setTerminalOpen(false)} aria-label="Fechar terminal">×</button>
             </div>
             <div className="terminal-output" onClick={() => inputRef.current?.focus()}>
-              {terminalLines.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
+              {terminalLines.map((line, index) => (
+                <p
+                  className={line.includes("A.L.I.C.E.") || line.includes("🐧") || line.startsWith("Manche") ? "alice-terminal-line" : undefined}
+                  key={`${line}-${index}`}
+                >
+                  {line}
+                </p>
+              ))}
               <form onSubmit={runCommand}>
                 <label htmlFor="terminal-command">lucas@tape:~$</label>
                 <input
