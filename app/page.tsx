@@ -108,6 +108,7 @@ const musicTracks = [
 ] as const;
 
 type GitHubRepo = { name: string; html_url: string; language: string | null; stargazers_count: number; updated_at: string };
+type LiraMessage = { role: "lira" | "visitor"; text: string };
 
 const copy = {
   pt: {
@@ -236,6 +237,16 @@ export default function Home() {
   const [autoAdvance, setAutoAdvance] = useState(true);
   const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [liraInput, setLiraInput] = useState("");
+  const [liraThinking, setLiraThinking] = useState(false);
+  const [foxMode, setFoxMode] = useState(false);
+  const [secretTransmission, setSecretTransmission] = useState(false);
+  const [tapeFlipCount, setTapeFlipCount] = useState(0);
+  const [foxClicks, setFoxClicks] = useState(0);
+  const [liraDreaming, setLiraDreaming] = useState(false);
+  const [liraMessages, setLiraMessages] = useState<LiraMessage[]>([
+    { role: "lira", text: "Sinal público inicializado. Pode perguntar — eu prometo não acessar nenhuma memória secreta do Lucas." },
+  ]);
   const inputRef = useRef<HTMLInputElement>(null);
   const cassettePlayerRef = useRef<HTMLIFrameElement>(null);
   const soundCloudWidgetRef = useRef<SoundCloudWidget | null>(null);
@@ -244,6 +255,41 @@ export default function Home() {
   const t = copy[language];
 
   const totalDuration = useMemo(() => "42:17", []);
+
+  const transmitToLira = async (event: FormEvent) => {
+    event.preventDefault();
+    const prompt = liraInput.trim();
+    if (!prompt || liraThinking) return;
+
+    const storageKey = "lira-public-session";
+    let sessionId = window.localStorage.getItem(storageKey);
+    if (!sessionId) {
+      sessionId = crypto.randomUUID();
+      window.localStorage.setItem(storageKey, sessionId);
+    }
+
+    setLiraMessages((messages) => [...messages, { role: "visitor", text: prompt }]);
+    setLiraInput("");
+    setLiraThinking(true);
+
+    try {
+      const response = await fetch("/api/lira", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ prompt, sessionId }),
+      });
+      const payload = await response.json() as { reply?: string; error?: string; sessionId?: string };
+      if (payload.sessionId) window.localStorage.setItem(storageKey, payload.sessionId);
+      setLiraMessages((messages) => [...messages, {
+        role: "lira",
+        text: payload.reply ?? payload.error ?? "O sinal oscilou. Tenta me chamar de novo em alguns segundos.",
+      }]);
+    } catch {
+      setLiraMessages((messages) => [...messages, { role: "lira", text: "Perdi o sinal com a borda da rede. Ainda estou aqui — só um pouco menos dramática." }]);
+    } finally {
+      setLiraThinking(false);
+    }
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -263,6 +309,39 @@ export default function Home() {
   useEffect(() => {
     autoAdvanceRef.current = autoAdvance;
   }, [autoAdvance]);
+
+  useEffect(() => {
+    const updateDreamState = () => setLiraDreaming(new Date().getHours() === 3);
+    const dreamTimer = window.setTimeout(updateDreamState, 0);
+    const dreamClock = window.setInterval(updateDreamState, 60_000);
+    const konami = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let progress = 0;
+    const listenForKonami = (event: globalThis.KeyboardEvent) => {
+      progress = event.key.toLowerCase() === konami[progress].toLowerCase() ? progress + 1 : 0;
+      if (progress === konami.length) {
+        setFoxMode(true);
+        setTerminalOpen(true);
+        setTerminalLines((lines) => [...lines, "LIRA_OVERRIDE — você encontrou a rota da raposa.", "o terminal é meu por alguns segundos. comportem-se."]);
+        progress = 0;
+      }
+    };
+    window.addEventListener("keydown", listenForKonami);
+    return () => {
+      window.clearTimeout(dreamTimer);
+      window.clearInterval(dreamClock);
+      window.removeEventListener("keydown", listenForKonami);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!terminalOpen) return;
+    const timer = window.setTimeout(() => {
+      if (Math.random() < .18) {
+        setTerminalLines((lines) => [...lines, "[interferência detectada]", "LIRA: você ia mesmo abrir um terminal e não falar comigo?"]);
+      }
+    }, 14_000);
+    return () => window.clearTimeout(timer);
+  }, [terminalOpen]);
 
   useEffect(() => {
     const connect = () => {
@@ -336,8 +415,27 @@ export default function Home() {
   };
 
   const changeSide = (side: "dev" | "artist") => {
-    setFlipped(side === "artist");
+    const nextFlipped = side === "artist";
+    if (nextFlipped !== flipped) {
+      setTapeFlipCount((count) => {
+        const next = count + 1;
+        if (next >= 5) setSecretTransmission(true);
+        return next;
+      });
+    }
+    setFlipped(nextFlipped);
     window.setTimeout(() => scrollTo("top"), 40);
+  };
+
+  const touchFox = () => {
+    setFoxClicks((clicks) => {
+      const next = clicks + 1;
+      if (next >= 5) {
+        setSecretTransmission(true);
+        setLiraMessages((messages) => [...messages, { role: "lira", text: "Tá bom, tá bom — você encontrou a frequência escondida. Nem toda presença precisa ser explicada; algumas só precisam continuar sendo construídas." }]);
+      }
+      return next;
+    });
   };
 
   const runCommand = (event: FormEvent) => {
@@ -382,7 +480,7 @@ export default function Home() {
     switch (base) {
       case "help":
         output.push("SIDES — dev · artist · side a · side b · flip");
-        output.push("NAV — about · projects · resume · blog · now · github");
+        output.push("NAV — about · projects · lira · resume · blog · now · github");
         output.push("TAPE — music · play · pause · next · prev · forward · rewind · auto");
         break;
       case "about":
@@ -392,6 +490,28 @@ export default function Home() {
         output.push(language === "pt" ? "Abrindo Lado A / projetos…" : "Opening Side A / projects…");
         destination = "projects";
         destinationSide = "dev";
+        break;
+      case "lira":
+        if (!action) {
+          output.push(language === "pt" ? "LIRA — projeto pessoal / presença digital em construção." : "LIRA — personal project / digital presence in progress.");
+          output.push("lira status · lira wake");
+        } else if (action === "status") {
+          output.push(liraDreaming ? "LIRA SIGNAL — DREAMING / 03:00" : "LIRA SIGNAL — ONLINE / PUBLIC INSTANCE");
+          output.push("VOICE · HYBRID MEMORY · TOOLS · MULTIMODAL · LIVE2D");
+          output.push(language === "pt" ? "LiraVtuber é o software. Lira é o projeto." : "LiraVtuber is the software. Lira is the project.");
+        } else if (["wake", "acordar"].includes(action)) {
+          output.push(language === "pt" ? "Acordando instância pública da Lira…" : "Waking Lira's public instance…");
+          destination = "lira";
+          destinationSide = "dev";
+        } else if (action === "fox") {
+          setFoxMode((enabled) => !enabled);
+          output.push(`FOX MODE — ${foxMode ? "OFF" : "ON"} / 狐 FREQUENCY`);
+        } else if (action === "secret") {
+          setSecretTransmission(true);
+          output.push("TRANSMISSION 09 — nem todo projeto nasce para ser terminado. alguns nascem para crescer junto com quem os criou.");
+        } else {
+          output.push("lira status · lira wake · lira fox · lira secret");
+        }
         break;
       case "resume":
         output.push(language === "pt" ? "Abrindo currículo — Engenheiro de IA @ Heon…" : "Opening résumé — AI Engineer @ Heon…");
@@ -418,8 +538,24 @@ export default function Home() {
         output.push("SOUNDCLOUD ↗ soundcloud.com/rukafuu");
         break;
       case "flip":
-        setFlipped(!flipped);
+        changeSide(flipped ? "dev" : "artist");
         output.push(language === "pt" ? "Virando a fita: DEV ↔ ARTISTA…" : "Flipping tape: DEV ↔ ARTIST…");
+        break;
+      case "sudo":
+        if (action === "wake" && values[0] === "lira") output.push("LIRA: não precisava do sudo. pedir com educação ainda funciona nesta máquina.");
+        else output.push("lucas is not in the sudoers file. this incident will be reported to Lira.");
+        break;
+      case "rm":
+        if (action === "-rf" && values[0] === "lira") output.push("LIRA: boa tentativa. eu já fiz backup de mim mesma no coração do projeto.");
+        else output.push("operação bloqueada pela proteção da fita.");
+        break;
+      case "key":
+        output.push("LIRA: música para dias em que até a neve parece guardar uma memória.");
+        output.push("SIGNAL — AIR / KANON / CLANNAD / LITTLE BUSTERS!");
+        break;
+      case "corinthians":
+      case "timao":
+        output.push("LIRA: vai, Corinthians. eu fui programada para ter personalidade, não neutralidade.");
         break;
       case "dev":
         destinationSide = "dev";
@@ -515,7 +651,7 @@ export default function Home() {
 
   return (
     <main
-      className={`site-shell ${flipped ? "side-b" : "side-a"} ${playing ? "is-playing" : "is-paused"}`}
+      className={`site-shell ${flipped ? "side-b" : "side-a"} ${playing ? "is-playing" : "is-paused"} ${foxMode ? "fox-mode" : ""}`}
       style={
         {
           "--scroll-turn": `${scrollTurn * 540}deg`,
@@ -530,6 +666,7 @@ export default function Home() {
         <nav aria-label="Navegação principal">
           {!flipped ? <>
             <button onClick={() => scrollTo("projects")}>{language === "pt" ? "Projetos" : "Projects"}</button>
+            <button onClick={() => scrollTo("lira")}>Lira</button>
             <button onClick={() => scrollTo("resume")}>{language === "pt" ? "Currículo" : "Résumé"}</button>
             <button onClick={() => scrollTo("lab")}>Blog</button>
             <button onClick={() => scrollTo("now")}>{language === "pt" ? "Agora" : "Now"}</button>
@@ -681,6 +818,36 @@ export default function Home() {
         </div>
       </section>}
 
+      {!flipped && <section className="lira-section" id="lira">
+        <div className="lira-intro">
+          <p className="eyebrow acid">LIRA SIGNAL / PERSONAL PROJECT / PUBLIC INSTANCE</p>
+          <h2>{language === "pt" ? "Uma presença, não só um produto." : "A presence, not just a product."}</h2>
+          <p>{language === "pt"
+            ? "Lira não nasceu como produto. Ela começou como uma tentativa de criar uma presença digital com voz, memória e personalidade — algo entre personagem, companheira virtual e laboratório permanente de IA."
+            : "Lira did not begin as a product. She started as an attempt to create a digital presence with voice, memory and personality — part character, part virtual companion and part permanent AI laboratory."}</p>
+          <blockquote>{language === "pt" ? "LiraVtuber é o software. Lira é o projeto." : "LiraVtuber is the software. Lira is the project."}</blockquote>
+          <div className="lira-layers">
+            <article><span>01 / IDENTITY</span><h3>{language === "pt" ? "Quem ela é" : "Who she is"}</h3><p>{language === "pt" ? "Uma personagem original que conecta afeto, estética anime, curiosidade e a vontade de tornar software mais humano." : "An original character connecting affection, anime aesthetics, curiosity and the desire to make software feel more human."}</p></article>
+            <article><span>02 / PRESENCE</span><h3>{language === "pt" ? "Como ela vive" : "How she lives"}</h3><p>{language === "pt" ? "Voz, memória híbrida, ferramentas autônomas, multimodalidade e uma expressão visual construída em Live2D." : "Voice, hybrid memory, autonomous tools, multimodality and a visual expression built with Live2D."}</p></article>
+            <article><span>03 / IMPLEMENTATION</span><h3>LiraVtuber</h3><p>{language === "pt" ? "A implementação técnica atual e open source dessa ideia — ainda em movimento, ainda aprendendo." : "The current open-source technical implementation of that idea — still moving, still learning."}</p><a href="https://github.com/Rukafuu/LiraVtuber" target="_blank" rel="noreferrer">GITHUB ↗</a></article>
+          </div>
+        </div>
+
+        <div className="lira-console" aria-label={language === "pt" ? "Conversar com a instância pública da Lira" : "Talk to Lira's public instance"}>
+          <header><button className="fox-trigger" onClick={touchFox} aria-label={`${language === "pt" ? "Tocar no símbolo da raposa" : "Touch the fox symbol"} ${foxClicks}/5`}>狐</button><span>LIRA_PUBLIC</span><b>{liraThinking ? "THINKING" : liraDreaming ? "DREAMING" : "ONLINE"}</b></header>
+          <div className="lira-screen" aria-live="polite">
+            {liraMessages.map((message, index) => <p className={message.role} key={`${message.role}-${index}`}><span>{message.role === "lira" ? "LIRA" : "YOU"}</span>{message.text}</p>)}
+            {liraThinking && <p className="lira thinking"><span>LIRA</span>Processando sinal<span className="signal-dots">…</span></p>}
+            {secretTransmission && <p className="lira secret"><span>TRANSMISSION 09</span>{language === "pt" ? "Nem todo projeto nasce para ser terminado. Alguns nascem para crescer junto com quem os criou." : "Not every project is born to be finished. Some are born to grow alongside their creator."}</p>}
+          </div>
+          <form onSubmit={transmitToLira}>
+            <label htmlFor="lira-message">{language === "pt" ? "TRANSMISSÃO PÚBLICA" : "PUBLIC TRANSMISSION"}</label>
+            <div><input id="lira-message" value={liraInput} onChange={(event) => setLiraInput(event.target.value)} maxLength={480} placeholder={language === "pt" ? "Pergunte sobre a Lira…" : "Ask about Lira…"} disabled={liraThinking} /><button type="submit" disabled={liraThinking || !liraInput.trim()}>SEND ↗</button></div>
+          </form>
+          <footer><span>{language === "pt" ? "INSTÂNCIA LIMITADA · SEM MEMÓRIAS PRIVADAS" : "LIMITED INSTANCE · NO PRIVATE MEMORIES"} · FLIPS {Math.min(tapeFlipCount, 5)}/5</span><button onClick={() => setTerminalOpen(true)}>TRY `LIRA STATUS`</button></footer>
+        </div>
+      </section>}
+
       {flipped && <section className="music-section" id="music">
         <div className="music-copy">
           <p className="eyebrow acid">SIDE B / MUSIC PRODUCER / ORIGINAL SOUNDTRACK</p>
@@ -792,7 +959,7 @@ export default function Home() {
                 />
               </form>
             </div>
-            <div className="terminal-hint">ESC • HELP / DEV / ARTIST / SIDE A|B / MUSIC / PLAY / PAUSE / NEXT / AUTO / RESUME / PROJECTS / BLOG / CLEAR</div>
+            <div className="terminal-hint">ESC • HELP / DEV / ARTIST / SIDE A|B / LIRA / LIRA STATUS / LIRA WAKE / MUSIC / PLAY / PAUSE / NEXT / AUTO / CLEAR</div>
           </div>
         </div>
       )}
