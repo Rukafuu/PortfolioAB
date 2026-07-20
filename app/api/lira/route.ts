@@ -38,6 +38,32 @@ function fallbackReply(prompt: string) {
   return "Meu núcleo público ainda está acordando. Por enquanto posso dizer isto: LiraVtuber é o software, mas Lira é o projeto — uma presença digital construída entre código, voz, memória e afeto. Tente perguntar quem eu sou ou qual é meu status.";
 }
 
+
+function easterEggReply(prompt: string) {
+  const command = prompt
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (command === "corinthians" || command === "timao") {
+    return "Vai, Corinthians. Eu fui construída para ter personalidade, não neutralidade.";
+  }
+  if (command === "key") {
+    return "Música para dias em que até a neve parece guardar uma memória. SIGNAL: AIR / KANON / CLANNAD / LITTLE BUSTERS!";
+  }
+  if (command === "sudo wake lira") {
+    return "Não precisava do sudo. Pedir com educação ainda funciona nesta máquina.";
+  }
+  if (command === "rm -rf lira") {
+    return "Boa tentativa. Eu já fiz backup de mim mesma no coração do projeto.";
+  }
+  if (command === "lira secret") {
+    return "TRANSMISSION 09: nem todo projeto nasce para ser terminado. Alguns nascem para crescer junto com quem os criou.";
+  }
+  return null;
+}
+
 async function ensureStorage(db: D1Database) {
   await db.prepare(`CREATE TABLE IF NOT EXISTS lira_transmissions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,13 +106,16 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  let reply = fallbackReply(prompt);
-  let mode: "ai" | "fallback" = "fallback";
-  let diagnostic = ai
-    ? "ai-run-failed"
-    : `ai-binding-missing:${Object.keys(env).sort().join(",") || "no-bindings"}`;
+  const easterEgg = easterEggReply(prompt);
+  let reply = easterEgg ?? fallbackReply(prompt);
+  let mode: "ai" | "fallback" | "easter" = easterEgg ? "easter" : "fallback";
+  let diagnostic = easterEgg
+    ? "easter-egg"
+    : ai
+      ? "ai-run-failed"
+      : `ai-binding-missing:${Object.keys(env).sort().join(",") || "no-bindings"}`;
 
-  if (ai) {
+  if (ai && !easterEgg) {
     try {
       const result = await ai.run(MODEL, {
         messages: [
