@@ -1013,11 +1013,19 @@ input:focus-visible {
 .blog-reader { position: relative; width: min(920px, 100%); max-height: calc(100dvh - 52px); overflow-y: auto; padding: clamp(35px, 6vw, 80px); border: 2px solid var(--paper); background: var(--ink); color: var(--paper); box-shadow: 12px 12px 0 var(--coral); -webkit-overflow-scrolling: touch; }
 .blog-reader > h2 { max-width: 800px; margin: 0 0 24px; font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif; font-size: clamp(3rem, 7vw, 6.5rem); line-height: .88; text-transform: uppercase; }
 .blog-close { position: absolute; top: 15px; right: 18px; border: 0; background: none; color: var(--paper); font-size: 2rem; cursor: pointer; }
-.blog-lead { padding: 22px 0; border-top: 1px solid var(--paper); border-bottom: 1px solid var(--paper); color: var(--acid); font-family: var(--font-geist-sans), sans-serif; font-size: 1.1rem; line-height: 1.6; }
+.blog-share-row { display: grid; grid-template-columns: 1fr auto; align-items: stretch; border-top: 1px solid var(--paper); border-bottom: 1px solid var(--paper); }
+.blog-lead { margin: 0; padding: 22px 24px 22px 0; color: var(--acid); font-family: var(--font-geist-sans), sans-serif; font-size: 1.1rem; line-height: 1.6; }
+.blog-share-row > button { min-width: 150px; padding: 0 18px; border: 0; border-left: 1px solid var(--paper); background: transparent; color: var(--paper); font-family: var(--font-geist-mono), monospace; font-size: .7rem; font-weight: 800; letter-spacing: .08em; cursor: pointer; }
+.blog-share-row > button:hover { background: var(--acid); color: var(--ink); }
 .blog-body { max-width: 720px; margin: 36px auto; }
 .blog-body p { font-family: var(--font-geist-sans), sans-serif; font-size: 1.05rem; line-height: 1.85; }
+.blog-body ul, .blog-body ol { margin: 24px 0 30px; padding-left: 1.35rem; font-family: var(--font-geist-sans), sans-serif; font-size: 1.05rem; line-height: 1.75; }
+.blog-body li { margin: .55rem 0; padding-left: .35rem; }
 .blog-body h3 { margin: 64px 0 22px; padding-top: 24px; border-top: 1px solid rgba(242,235,221,.28); color: var(--acid); font-family: var(--font-geist-sans), sans-serif; font-size: clamp(1.7rem, 3.3vw, 2.8rem); line-height: 1.08; letter-spacing: -.035em; }
+.blog-body h4 { margin: 36px 0 14px; color: var(--coral); font-family: var(--font-geist-sans), sans-serif; font-size: 1.28rem; line-height: 1.2; }
 .blog-body code { padding: .12em .38em; border: 1px solid rgba(203,255,0,.45); background: rgba(203,255,0,.08); color: var(--acid); font-family: var(--font-geist-mono), monospace; font-size: .9em; }
+.blog-body pre { margin: 30px 0; padding: 22px; overflow-x: auto; border: 1px solid rgba(203,255,0,.45); background: #090a08; }
+.blog-body pre code { padding: 0; border: 0; background: transparent; color: var(--paper); font-size: .82rem; line-height: 1.65; }
 .blog-reader footer { min-height: auto; padding: 24px 0 0; border-top: 1px solid rgba(242,235,221,.35); }
 
 .now-section {
@@ -1183,6 +1191,9 @@ footer button { border: 0; background: none; cursor: pointer; color: var(--acid)
   .note-stack em { grid-column: 2; }
   .blog-overlay { padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left)); }
   .blog-reader { max-height: calc(100dvh - 20px); padding: 55px 22px 30px; box-shadow: 6px 6px 0 var(--coral); }
+  .blog-share-row { grid-template-columns: 1fr; }
+  .blog-lead { padding-right: 0; }
+  .blog-share-row > button { min-height: 48px; border-top: 1px solid rgba(242,235,221,.35); border-left: 0; }
   .resume-contact { overflow-wrap: anywhere; }
   .soundcloud-label { gap: 12px; }
   .soundcloud-label b { max-width: 58%; text-align: right; overflow-wrap: anywhere; }
