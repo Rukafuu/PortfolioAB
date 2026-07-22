@@ -1,0 +1,47 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2.4" fill="#0B0B0A"/>
+    </pattern>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M0 1H8" stroke="#F2EBDD" stroke-opacity=".08"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="160%" height="170%">
+      <feDropShadow dx="14" dy="14" stdDeviation="0" flood-color="#0B0B0A"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="#F2EBDD"/>
+  <path d="M0 0H1200V86H0Z" fill="#C7FF3A"/>
+  <path d="M0 538H1200V630H0Z" fill="#FF4F73"/>
+  <path d="M0 86H870V538H0Z" fill="#0B0B0A"/>
+  <path d="M0 86H870V538H0Z" fill="url(#scan)"/>
+  <path d="M870 86H1200V538H870Z" fill="#C7FF3A"/>
+  <path d="M870 86H1200V538H870Z" fill="url(#dots)" opacity=".62"/>
+
+  <text x="44" y="56" fill="#0B0B0A" font-family="Arial Black, Arial, sans-serif" font-size="27" font-weight="900" letter-spacing="2">LUCAS // PERSONAL OS</text>
+  <text x="1156" y="56" fill="#0B0B0A" text-anchor="end" font-family="Courier New, monospace" font-size="19" font-weight="700">C-90 / HIGH POSITION</text>
+
+  <text x="48" y="190" fill="#F2EBDD" font-family="Arial Black, Arial, sans-serif" font-size="73" font-weight="900" letter-spacing="-4">SISTEMAS</text>
+  <text x="48" y="264" fill="#F2EBDD" font-family="Arial Black, Arial, sans-serif" font-size="73" font-weight="900" letter-spacing="-4">QUE PARECEM</text>
+  <text x="48" y="338" fill="#FF4F73" font-family="Arial Black, Arial, sans-serif" font-size="73" font-weight="900" letter-spacing="-4">VIVOS.</text>
+  <text x="52" y="393" fill="#C7FF3A" font-family="Courier New, monospace" font-size="19" font-weight="700" letter-spacing="2">IA • BACKEND • CREATIVE ENGINEERING</text>
+  <path d="M50 430H816" stroke="#F2EBDD" stroke-opacity=".36"/>
+  <text x="52" y="472" fill="#F2EBDD" font-family="Courier New, monospace" font-size="18" font-weight="700">SIDE A: DEV SYSTEM</text>
+  <text x="370" y="472" fill="#FF4F73" font-family="Courier New, monospace" font-size="18" font-weight="700">SIDE B: PRODUCER</text>
+
+  <g filter="url(#shadow)">
+    <path d="M918 171H1149V420H918Z" fill="#F2EBDD" stroke="#0B0B0A" stroke-width="6"/>
+    <path d="M918 171H1149V220H918Z" fill="#FF4F73" stroke="#0B0B0A" stroke-width="6"/>
+    <rect x="942" y="255" width="183" height="84" rx="42" fill="#0B0B0A"/>
+    <circle cx="979" cy="297" r="28" fill="#F2EBDD" stroke="#0B0B0A" stroke-width="4"/>
+    <circle cx="979" cy="297" r="11" fill="#C7FF3A"/>
+    <circle cx="1088" cy="297" r="28" fill="#F2EBDD" stroke="#0B0B0A" stroke-width="4"/>
+    <circle cx="1088" cy="297" r="11" fill="#FF4F73"/>
+    <path d="M960 375H1107L1120 402H947L960 375Z" fill="#0B0B0A"/>
+    <text x="1034" y="203" fill="#0B0B0A" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="17" font-weight="900">SIDE A / SIDE B</text>
+  </g>
+
+  <text x="44" y="588" fill="#0B0B0A" font-family="Arial Black, Arial, sans-serif" font-size="25" font-weight="900">PLAY LOUD — BUILD STRANGE THINGS</text>
+  <text x="1156" y="588" fill="#0B0B0A" text-anchor="end" font-family="Courier New, monospace" font-size="17" font-weight="700">JUNDIAÍ / SP — 2026</text>
+</svg>
