@@ -1,0 +1,44 @@
+<svg width="1200" height="480" viewBox="0 0 1200 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="dots" width="14" height="14" patternUnits="userSpaceOnUse">
+      <circle cx="3" cy="3" r="2.4" fill="#0B0B0A"/>
+    </pattern>
+    <pattern id="scan" width="8" height="8" patternUnits="userSpaceOnUse">
+      <path d="M0 1H8" stroke="#F2EBDD" stroke-opacity=".08"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="150%" height="160%">
+      <feDropShadow dx="14" dy="14" stdDeviation="0" flood-color="#0B0B0A"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="480" fill="#F2EBDD"/>
+  <path d="M0 0H1200V78H0Z" fill="#C7FF3A"/>
+  <path d="M0 402H1200V480H0Z" fill="#FF4F73"/>
+  <path d="M872 78H1200V402H872Z" fill="#C7FF3A"/>
+  <path d="M872 78H1200V402H872Z" fill="url(#dots)" opacity=".62"/>
+  <path d="M0 78H872V402H0Z" fill="#0B0B0A"/>
+  <path d="M0 78H872V402H0Z" fill="url(#scan)"/>
+
+  <text x="42" y="50" fill="#0B0B0A" font-family="Arial Black, Arial, sans-serif" font-size="26" font-weight="900" letter-spacing="2">LUCAS // PERSONAL OS</text>
+  <text x="1158" y="50" fill="#0B0B0A" text-anchor="end" font-family="Courier New, monospace" font-size="19" font-weight="700">C-90 / HIGH POSITION</text>
+
+  <text x="48" y="157" fill="#F2EBDD" font-family="Arial Black, Arial, sans-serif" font-size="76" font-weight="900" letter-spacing="-4">SYSTEMS</text>
+  <text x="48" y="230" fill="#F2EBDD" font-family="Arial Black, Arial, sans-serif" font-size="76" font-weight="900" letter-spacing="-4">THAT FEEL</text>
+  <text x="48" y="303" fill="#FF4F73" font-family="Arial Black, Arial, sans-serif" font-size="76" font-weight="900" letter-spacing="-4">ALIVE.</text>
+  <text x="52" y="353" fill="#C7FF3A" font-family="Courier New, monospace" font-size="19" font-weight="700" letter-spacing="2">AI ENGINEERING • BACKEND • CREATIVE CODE</text>
+
+  <g filter="url(#shadow)">
+    <path d="M925 137H1139V341H925Z" fill="#F2EBDD" stroke="#0B0B0A" stroke-width="6"/>
+    <path d="M925 137H1139V181H925Z" fill="#FF4F73" stroke="#0B0B0A" stroke-width="6"/>
+    <rect x="949" y="207" width="166" height="76" rx="38" fill="#0B0B0A"/>
+    <circle cx="982" cy="245" r="25" fill="#F2EBDD" stroke="#0B0B0A" stroke-width="4"/>
+    <circle cx="982" cy="245" r="10" fill="#C7FF3A"/>
+    <circle cx="1082" cy="245" r="25" fill="#F2EBDD" stroke="#0B0B0A" stroke-width="4"/>
+    <circle cx="1082" cy="245" r="10" fill="#FF4F73"/>
+    <path d="M965 311H1099L1112 333H952L965 311Z" fill="#0B0B0A"/>
+    <text x="1032" y="166" fill="#0B0B0A" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="17" font-weight="900">SIDE A / SIDE B</text>
+  </g>
+
+  <text x="42" y="451" fill="#0B0B0A" font-family="Arial Black, Arial, sans-serif" font-size="24" font-weight="900">PLAY LOUD — BUILD STRANGE THINGS</text>
+  <text x="1158" y="451" fill="#0B0B0A" text-anchor="end" font-family="Courier New, monospace" font-size="18" font-weight="700">JUNDIAÍ / SP — 2026</text>
+</svg>
