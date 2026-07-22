@@ -26,6 +26,24 @@ function renderBlogContent(content: string) {
       return <h3 key={index}>{renderInlineCode(block.slice(3))}</h3>;
     }
 
+    if (block.startsWith("### ")) {
+      return <h4 key={index}>{renderInlineCode(block.slice(4))}</h4>;
+    }
+
+    if (block.startsWith("```")) {
+      const code = block.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
+      return <pre key={index}><code>{code}</code></pre>;
+    }
+
+    const lines = block.split("\n");
+    if (lines.every((line) => /^\* /.test(line))) {
+      return <ul key={index}>{lines.map((line, itemIndex) => <li key={itemIndex}>{renderInlineCode(line.slice(2))}</li>)}</ul>;
+    }
+
+    if (lines.every((line) => /^\d+\. /.test(line))) {
+      return <ol key={index}>{lines.map((line, itemIndex) => <li key={itemIndex}>{renderInlineCode(line.replace(/^\d+\. /, ""))}</li>)}</ol>;
+    }
+
     return <p key={index}>{renderInlineCode(block)}</p>;
   });
 }
@@ -237,6 +255,7 @@ export default function Home() {
   const [autoAdvance, setAutoAdvance] = useState(true);
   const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+  const [copiedPostId, setCopiedPostId] = useState<string | null>(null);
   const [aliceSignal, setAliceSignal] = useState(false);
   const [liraInput, setLiraInput] = useState("");
   const [liraThinking, setLiraThinking] = useState(false);
@@ -257,6 +276,36 @@ export default function Home() {
   const autoAdvanceRef = useRef(true);
   const aliceSignalTimeoutRef = useRef<number | null>(null);
   const t = copy[language];
+
+  const openPost = (post: BlogPost) => {
+    window.history.replaceState(null, "", `#post=${post.id}`);
+    setSelectedPost(post);
+    setCopiedPostId(null);
+  };
+
+  const closePost = () => {
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+    setSelectedPost(null);
+    setCopiedPostId(null);
+  };
+
+  const copyPostLink = async (post: BlogPost) => {
+    const url = `${window.location.origin}${window.location.pathname}#post=${post.id}`;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const textArea = document.createElement("textarea");
+      textArea.value = url;
+      textArea.style.position = "fixed";
+      textArea.style.opacity = "0";
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      textArea.remove();
+    }
+    setCopiedPostId(post.id);
+    window.setTimeout(() => setCopiedPostId((current) => current === post.id ? null : current), 2200);
+  };
 
   const totalDuration = useMemo(() => "42:17", []);
 
@@ -296,6 +345,17 @@ export default function Home() {
       setLiraThinking(false);
     }
   };
+
+  useEffect(() => {
+    const openPostFromHash = () => {
+      const match = window.location.hash.match(/^#post=(.+)$/);
+      const post = match ? posts.find((item) => item.id === decodeURIComponent(match[1])) : null;
+      setSelectedPost(post?.status === "published" ? post : null);
+    };
+    openPostFromHash();
+    window.addEventListener("hashchange", openPostFromHash);
+    return () => window.removeEventListener("hashchange", openPostFromHash);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -938,7 +998,7 @@ export default function Home() {
         <div className="note-stack">
           {posts.map((note, index) => {
             const scheduled = note.status === "scheduled";
-            return <button className={`note-row${scheduled ? " scheduled" : ""}`} key={note.id} onClick={() => setSelectedPost(note)} disabled={scheduled} aria-label={scheduled ? `${note.title[language]} — ${scheduledLabel(note.publishedAt, language)}` : undefined}><span>N-{String(index + 1).padStart(3, "0")}</span><div><h3>{note.title[language]}</h3><p>{note.excerpt[language]}</p></div><em>{scheduled ? scheduledLabel(note.publishedAt, language) : note.tag}</em></button>;
+            return <button className={`note-row${scheduled ? " scheduled" : ""}`} key={note.id} onClick={() => openPost(note)} disabled={scheduled} aria-label={scheduled ? `${note.title[language]} — ${scheduledLabel(note.publishedAt, language)}` : undefined}><span>N-{String(index + 1).padStart(3, "0")}</span><div><h3>{note.title[language]}</h3><p>{note.excerpt[language]}</p></div><em>{scheduled ? scheduledLabel(note.publishedAt, language) : note.tag}</em></button>;
           })}
         </div>
       </section>}
@@ -965,7 +1025,7 @@ export default function Home() {
 
       <iframe key={musicTracks[activeTrack][2]} ref={cassettePlayerRef} className="cassette-audio" title={`Cassette player — ${musicTracks[activeTrack][1]}`} allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(musicTracks[activeTrack][2])}&color=%23c7ff3a&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`} />
 
-      {selectedPost && <div className="blog-overlay" role="dialog" aria-modal="true" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedPost(null); }}><article className="blog-reader"><button className="blog-close" onClick={() => setSelectedPost(null)}>×</button><p className="eyebrow acid">LINER NOTE / {selectedPost.tag} / {selectedPost.publishedAt}</p><h2>{selectedPost.title[language]}</h2><p className="blog-lead">{selectedPost.excerpt[language]}</p><div className="blog-body">{renderBlogContent(selectedPost.content[language])}</div><footer><span>LUCAS // PERSONAL OS</span><button onClick={() => setSelectedPost(null)}>FECHAR NOTA ↑</button></footer></article></div>}
+      {selectedPost && <div className="blog-overlay" role="dialog" aria-modal="true" onMouseDown={(event) => { if (event.target === event.currentTarget) closePost(); }}><article className="blog-reader"><button className="blog-close" onClick={closePost} aria-label={language === "pt" ? "Fechar artigo" : "Close article"}>×</button><p className="eyebrow acid">LINER NOTE / {selectedPost.tag} / {selectedPost.publishedAt}</p><h2>{selectedPost.title[language]}</h2><div className="blog-share-row"><p className="blog-lead">{selectedPost.excerpt[language]}</p><button onClick={() => copyPostLink(selectedPost)}>{copiedPostId === selectedPost.id ? (language === "pt" ? "LINK COPIADO ✓" : "LINK COPIED ✓") : (language === "pt" ? "COPIAR LINK ↗" : "COPY LINK ↗")}</button></div><div className="blog-body">{renderBlogContent(selectedPost.content[language])}</div><footer><span>LUCAS // PERSONAL OS</span><button onClick={closePost}>{language === "pt" ? "FECHAR NOTA ↑" : "CLOSE NOTE ↑"}</button></footer></article></div>}
 
       {terminalOpen && (
         <div
