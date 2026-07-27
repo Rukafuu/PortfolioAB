@@ -12,527 +12,6 @@ export type BlogPost = {
 // O post mais recente deve ficar no topo da lista.
 export const posts: BlogPost[] = [
   {
-    id: "rag-nao-e-memoria",
-    title: {
-      pt: "RAG não é memória: pare de tratar seu banco vetorial como cérebro",
-      en: "RAG is not memory: stop treating your vector database like a brain",
-    },
-    tag: "ENGINEERING / AI",
-    excerpt: {
-      pt: "Busca semântica cria continuidade. Memória precisa interpretar, atualizar, relacionar e esquecer.",
-      en: "Semantic search creates continuity. Memory must interpret, update, relate and forget.",
-    },
-    content: {
-      pt: `Você conversa com um assistente por alguns minutos.
-
-Conta onde trabalha, quais tecnologias utiliza, o nome do seu projeto e até que prefere respostas mais diretas.
-
-Horas depois, pergunta:
-
-— Qual era mesmo o projeto que eu estava desenvolvendo?
-
-O sistema consulta um banco vetorial, encontra um trecho parecido com a pergunta e responde corretamente.
-
-Pronto. Temos memória.
-
-Não.
-
-Temos busca.
-
-Uma busca muito boa, semanticamente sofisticada e perfeitamente capaz de criar a ilusão de continuidade. Mas ainda assim, busca.
-
-Existe uma tendência crescente de chamar qualquer informação recuperada por RAG de “memória do agente”. O usuário diz alguma coisa, o sistema transforma o texto em embedding, salva em um banco vetorial e recupera depois por similaridade.
-
-Como a resposta parece lembrar do passado, concluímos que o sistema se lembra.
-
-Mas encontrar uma anotação antiga não é a mesma coisa que ter memória.
-
-Seu banco vetorial é um arquivo. Não um cérebro.
-
-## RAG encontra textos, não lembranças
-
-Retrieval-Augmented Generation resolve um problema bastante específico: fornecer ao modelo informações que não estão disponíveis em seu contexto imediato ou em seus parâmetros.
-
-O processo, de forma simplificada, costuma ser este:
-
-1. O usuário faz uma pergunta.
-2. A pergunta é transformada em um vetor.
-3. O sistema procura vetores semanticamente semelhantes.
-4. Os trechos encontrados são colocados no contexto do modelo.
-5. O modelo produz uma resposta usando esses trechos.
-
-Isso é extremamente útil.
-
-RAG permite consultar documentos internos, bases de conhecimento, manuais, históricos de atendimento, artigos, contratos e praticamente qualquer conteúdo textual que possa ser indexado.
-
-Mas em nenhum momento desse processo o sistema necessariamente:
-
-* compreendeu a importância daquela informação;
-* relacionou o fato com outros acontecimentos;
-* percebeu que algo mudou;
-* resolveu contradições;
-* decidiu o que deveria ser esquecido;
-* atualizou sua representação sobre o usuário;
-* distinguiu um evento isolado de uma preferência permanente.
-
-Ele apenas encontrou um texto parecido.
-
-O Google também encontra uma página que você acessou cinco anos atrás. Nem por isso dizemos que o Google se lembra da sua infância.
-
-## Similaridade não é significado
-
-Embeddings são excelentes para aproximar conteúdos semanticamente relacionados.
-
-Uma frase como:
-
-“Estou trabalhando em uma assistente virtual para clínicas.”
-
-pode ficar próxima de:
-
-“O projeto de IA médica precisa integrar o WhatsApp.”
-
-Essa proximidade é útil para recuperação.
-
-Mas um vetor não sabe, por conta própria, que a primeira frase descreve o emprego atual do usuário, enquanto a segunda pode ser apenas uma anotação antiga, uma ideia descartada ou um exemplo hipotético.
-
-Para o banco vetorial, ambas são representações matemáticas ocupando regiões próximas em um espaço de alta dimensionalidade.
-
-Ele não sabe qual informação é verdadeira.
-
-Não sabe qual é recente.
-
-Não sabe qual substitui a anterior.
-
-Não sabe se aquilo é importante.
-
-E, principalmente, não sabe o que aquela informação representa na história do usuário.
-
-Tratar similaridade como memória é como jogar todos os papéis da sua vida em uma caixa, contratar alguém muito rápido para encontrar folhas parecidas e chamar essa pessoa de consciência.
-
-Ela pode localizar o documento certo.
-
-Mas não necessariamente entende sua trajetória.
-
-## A ilusão funciona porque o modelo completa o resto
-
-A confusão acontece porque modelos de linguagem são muito bons em produzir continuidade narrativa.
-
-Você recupera três fragmentos desconectados:
-
-* “Lucas trabalha com inteligência artificial.”
-* “O projeto se chama Lia.”
-* “A aplicação atende clínicas.”
-
-O modelo recebe esses trechos e responde:
-
-“Você está desenvolvendo a Lia, uma inteligência artificial voltada para clínicas.”
-
-Parece uma lembrança consolidada.
-
-Mas a coerência foi criada durante a geração da resposta, não durante o armazenamento.
-
-O banco não guardou uma representação estruturada como:
-
-\`\`\`
-Pessoa: Lucas
-Emprego atual: Engenheiro de IA
-Projeto principal: Lia
-Domínio: Clínicas
-Estado: Ativo
-Última atualização: Julho de 2026
-Confiança: Alta
-\`\`\`
-
-Ele guardou pedaços de texto.
-
-Foi o modelo que, naquele momento, montou uma explicação plausível a partir deles.
-
-Quando funciona, parece mágico.
-
-Quando falha, o sistema mistura épocas, projetos, opiniões, exemplos e fatos como se todos pertencessem ao mesmo presente.
-
-É assim que uma IA “lembra” de uma preferência que o usuário abandonou há seis meses ou trata uma hipótese antiga como decisão definitiva.
-
-Ela não está recordando errado.
-
-Ela nunca recordou.
-
-Ela apenas recuperou o trecho errado e improvisou muito bem.
-
-## Memória precisa sobreviver à contradição
-
-Imagine que um usuário diga:
-
-“Prefiro trabalhar presencialmente.”
-
-Alguns meses depois, ele afirma:
-
-“Depois dessa experiência, quero apenas vagas remotas.”
-
-Um RAG ingênuo pode armazenar as duas frases.
-
-Quando o usuário perguntar sobre suas preferências profissionais, o sistema talvez recupere ambas, talvez apenas uma, dependendo da similaridade da consulta, do algoritmo de busca e da quantidade de documentos retornados.
-
-Qual delas representa o estado atual?
-
-O banco vetorial não sabe.
-
-Uma arquitetura de memória deveria ser capaz de interpretar que:
-
-* existia uma preferência anterior;
-* um novo acontecimento provocou uma mudança;
-* a informação recente substitui ou reduz a validade da anterior;
-* o histórico ainda pode ser relevante, mas não deve ser tratado como estado atual.
-
-Memória não é apenas persistência.
-
-É transformação.
-
-Nós não armazenamos cada experiência como um arquivo imutável. Reorganizamos o passado com base no presente, reforçamos padrões, descartamos detalhes, atualizamos crenças e atribuímos importância diferente aos acontecimentos.
-
-Uma implementação artificial não precisa copiar perfeitamente o cérebro humano.
-
-Mas precisa fazer mais do que executar uma busca por cosseno.
-
-## Salvar tudo também não é lembrar
-
-Existe outra ideia perigosa:
-
-“Quanto mais informações armazenarmos, melhor será a memória.”
-
-Não necessariamente.
-
-Uma memória que nunca esquece se transforma em ruído.
-
-Conversas possuem dezenas de informações que não precisam sobreviver:
-
-* comentários momentâneos;
-* brincadeiras;
-* erros de digitação;
-* hipóteses descartadas;
-* dados repetidos;
-* estados emocionais temporários;
-* instruções válidas apenas para aquela tarefa.
-
-Se cada frase vira uma “memória”, o sistema começa a competir consigo mesmo.
-
-Informações importantes ficam soterradas por fragmentos irrelevantes. Preferências permanentes dividem espaço com comentários passageiros. O histórico cresce, a recuperação fica mais cara e a qualidade das respostas pode piorar.
-
-Um sistema de memória precisa decidir:
-
-* o que merece ser armazenado;
-* por quanto tempo;
-* em qual categoria;
-* com qual nível de confiança;
-* qual informação substitui outra;
-* quais dados podem ser consolidados;
-* quais devem expirar;
-* quais não deveriam ter sido salvos.
-
-Esquecimento não é defeito da memória.
-
-É parte dela.
-
-## O banco vetorial é o índice remissivo, não o livro
-
-Um banco vetorial pode ser uma excelente peça dentro de uma arquitetura de memória.
-
-O problema não está em utilizá-lo.
-
-O problema está em acreditar que ele resolve sozinho tudo o que chamamos de memória.
-
-Pense em um livro técnico.
-
-O índice remissivo permite localizar rapidamente onde determinado assunto aparece. Você procura “autenticação” e encontra as páginas relacionadas.
-
-O índice é útil porque aponta para o conteúdo.
-
-Mas ele não substitui o livro, não interpreta suas ideias, não verifica se um capítulo contradiz outro e não reescreve a conclusão quando uma nova edição é publicada.
-
-O banco vetorial cumpre um papel semelhante.
-
-Ele ajuda a localizar.
-
-A camada de memória precisa interpretar, organizar, atualizar e governar aquilo que foi localizado.
-
-RAG pode ser o mecanismo de acesso à memória.
-
-Não a memória inteira.
-
-## Uma arquitetura real precisa separar responsabilidades
-
-Se você está construindo um agente que precisa acompanhar um usuário, projeto ou processo ao longo do tempo, vale separar pelo menos algumas camadas.
-
-### Contexto de trabalho
-
-É aquilo que está sendo utilizado agora.
-
-Inclui a conversa atual, os documentos abertos, a tarefa em andamento, resultados recentes de ferramentas e decisões tomadas durante a execução.
-
-Essa informação pode desaparecer quando a tarefa termina.
-
-Nem tudo que entra no contexto precisa virar memória permanente.
-
-### Memória episódica
-
-Registra acontecimentos.
-
-Por exemplo:
-
-Em 18 de julho, o usuário decidiu substituir o sistema de autenticação.
-
-O foco aqui não é apenas o fato, mas o evento: quando aconteceu, em qual contexto, quem participou e quais consequências teve.
-
-Ela responde perguntas como:
-
-* O que aconteceu?
-* Quando aconteceu?
-* Em qual sequência?
-* Qual decisão levou ao estado atual?
-
-### Memória semântica
-
-Representa fatos consolidados.
-
-Por exemplo:
-
-O projeto utiliza Fastify como BFF.
-
-Essa informação não precisa carregar toda a conversa que levou à decisão. Ela pode existir como conhecimento atual do sistema, desde que possua origem, data e possibilidade de atualização.
-
-### Memória procedural
-
-Registra como algo deve ser feito.
-
-Por exemplo:
-
-Ao criar novos endpoints, utilizar Zod para validação e retornar o envelope padrão da API.
-
-Isso é diferente de lembrar que uma decisão ocorreu. Trata-se de preservar um procedimento, padrão ou regra operacional.
-
-### Preferências e identidade
-
-Algumas informações descrevem o usuário ou a entidade acompanhada:
-
-O usuário prefere explicações técnicas diretas.
-
-Esses dados exigem cuidado especial. Precisam de níveis de confiança, possibilidade de correção e critérios claros para não transformar comentários ocasionais em características permanentes.
-
-### Recuperação
-
-Somente depois dessas divisões entra o RAG.
-
-Ele pode localizar os episódios, fatos, regras e preferências relevantes para a situação atual.
-
-O banco vetorial continua importante.
-
-Ele apenas deixa de carregar sozinho uma responsabilidade que nunca deveria ter recebido.
-
-## Memória precisa de metadados
-
-Um dos sinais de uma arquitetura frágil é armazenar apenas texto e embedding.
-
-Uma memória minimamente útil costuma precisar de informações adicionais:
-
-\`\`\`json
-{
-  "content": "O usuário prefere vagas remotas.",
-  "type": "preference",
-  "scope": "career",
-  "created_at": "2026-07-10",
-  "updated_at": "2026-07-20",
-  "confidence": 0.91,
-  "status": "active",
-  "source": "user_statement",
-  "supersedes": "memory_184",
-  "expires_at": null
-}
-\`\`\`
-
-Esses campos permitem que o sistema faça perguntas que similaridade semântica não consegue responder sozinha:
-
-* Essa informação ainda está ativa?
-* Qual é a mais recente?
-* Ela veio diretamente do usuário ou foi inferida?
-* Substitui alguma informação anterior?
-* É uma preferência permanente ou temporária?
-* Pode ser utilizada em qualquer contexto?
-* Qual é o nível de confiança?
-* Deveria expirar?
-
-Sem isso, seu agente não possui memória.
-
-Possui um depósito de frases.
-
-## Nem toda recuperação deve ser semântica
-
-Outra consequência de tratar RAG como solução universal é tentar resolver toda consulta com busca vetorial.
-
-Mas memória também exige outros tipos de acesso.
-
-Para encontrar a preferência mais recente de um usuário, talvez uma consulta temporal seja mais apropriada.
-
-Para localizar todas as decisões ainda ativas de um projeto, um filtro por estado pode ser melhor.
-
-Para descobrir quem é responsável por uma tarefa, uma relação em banco relacional ou grafo pode ser mais confiável.
-
-Para verificar a versão atual de uma configuração, uma chave estruturada provavelmente supera qualquer embedding.
-
-Busca vetorial é poderosa quando não sabemos exatamente como o conteúdo relevante foi escrito.
-
-Ela não precisa substituir:
-
-* SQL;
-* filtros por metadados;
-* armazenamento chave-valor;
-* grafos;
-* eventos;
-* regras de negócio;
-* versionamento;
-* consultas temporais.
-
-Às vezes, a melhor memória para a pergunta “qual é o nome do usuário?” é uma coluna chamada name.
-
-Nem tudo precisa ser uma aventura em 1.536 dimensões.
-
-## O problema aparece quando o agente precisa agir
-
-Em um chatbot demonstrativo, recuperar um trecho levemente incorreto pode resultar apenas em uma resposta estranha.
-
-Em um agente operacional, o impacto é maior.
-
-Imagine um sistema que:
-
-* agenda consultas;
-* envia cobranças;
-* modifica código;
-* responde clientes;
-* aprova documentos;
-* altera configurações;
-* executa automações.
-
-Se a “memória” do agente é apenas uma coleção de fragmentos recuperados por similaridade, uma informação desatualizada pode virar ação.
-
-O sistema pode utilizar um endereço antigo, aplicar uma regra substituída, contactar a pessoa errada ou executar um procedimento que já não é válido.
-
-Quanto maior a autonomia, menor deve ser a tolerância à memória improvisada.
-
-Um agente não deveria agir porque encontrou um texto parecido.
-
-Deveria agir porque recuperou uma informação válida, atual, autorizada, rastreável e adequada ao contexto.
-
-## Como saber se sua memória é apenas um RAG fantasiado
-
-Faça algumas perguntas ao seu sistema:
-
-* Ele distingue informação atual de informação histórica?
-* Consegue explicar de onde veio uma lembrança?
-* Sabe quando uma informação foi atualizada?
-* Resolve contradições ou apenas recupera ambas?
-* Possui critérios para não armazenar algo?
-* Consegue esquecer ou invalidar informações?
-* Separa fatos, eventos, preferências e instruções?
-* Trata inferências de forma diferente de declarações explícitas?
-* Impede que dados de um contexto vazem para outro?
-* Recupera informações por tempo, estado e relacionamento, além de similaridade?
-
-Se a resposta para quase tudo for “não”, você provavelmente não construiu memória.
-
-Você conectou um modelo de linguagem a uma busca semântica.
-
-O que não é pouco.
-
-Só não é a mesma coisa.
-
-## Chamar corretamente melhora a arquitetura
-
-Talvez tudo isso pareça apenas uma discussão de nomenclatura.
-
-Não é.
-
-Quando chamamos recuperação de memória, deixamos de procurar as partes que estão faltando.
-
-Não implementamos consolidação porque acreditamos que o vetor já resolveu.
-
-Não criamos versionamento porque todos os fragmentos continuam disponíveis.
-
-Não tratamos contradições porque esperamos que o modelo descubra sozinho.
-
-Não definimos políticas de retenção porque “mais contexto é sempre melhor”.
-
-Não distinguimos observação de inferência porque ambas terminam como texto no mesmo banco.
-
-O nome errado esconde o problema técnico.
-
-RAG é uma tecnologia extraordinária.
-
-Mas sua principal virtude não é lembrar.
-
-É encontrar.
-
-E encontrar uma informação é apenas o começo do que um sistema precisa fazer para realmente utilizá-la como memória.
-
-## Seu agente não precisa de um cérebro falso
-
-Não precisamos reproduzir biologicamente a memória humana para construir agentes úteis.
-
-Também não precisamos inventar consciência, sentimentos ou uma réplica digital do hipocampo.
-
-Precisamos apenas parar de fingir que inserir embeddings em um banco encerra a discussão.
-
-Uma boa arquitetura pode ser relativamente simples:
-
-* informações importantes são extraídas;
-* cada informação recebe tipo e contexto;
-* fatos possuem estado e validade;
-* eventos preservam histórico;
-* contradições são detectadas;
-* atualizações substituem ou enfraquecem registros anteriores;
-* dados irrelevantes expiram;
-* a recuperação combina similaridade, filtros e relações;
-* o modelo recebe apenas aquilo que realmente importa.
-
-O RAG continua presente.
-
-Mas agora ele trabalha para a memória, em vez de se passar por ela.
-
-Seu banco vetorial pode ser uma ótima biblioteca.
-
-Pode organizar milhões de fragmentos e encontrar uma passagem em milissegundos.
-
-Só não confunda o bibliotecário com alguém que viveu todas as histórias guardadas nas estantes.
-
-RAG recupera.
-
-Memória interpreta, atualiza, relaciona e esquece.
-
-E enquanto tratarmos essas duas coisas como sinônimos, continuaremos construindo agentes que parecem lembrar de tudo — até o momento em que realmente precisam lembrar de alguma coisa.`,
-      en: `A system stores what you say as embeddings, retrieves a similar passage hours later and answers correctly. It feels like memory. It is not. It is very good search.
-
-## RAG retrieves text, not memories
-
-Retrieval-Augmented Generation gives a model information outside its immediate context or parameters. It is excellent for documents, knowledge bases and histories, but it does not inherently understand importance, resolve contradictions, notice change or decide what should be forgotten.
-
-## Similarity is not meaning
-
-A vector does not know whether a sentence describes the present, an abandoned idea or a hypothetical example. It does not know which fact is true, recent or important. The language model creates the coherent narrative at generation time.
-
-## Memory must survive contradiction
-
-Real memory architecture needs current state and history. It should know when a new preference supersedes an old one, retain provenance and confidence, consolidate repetition and let irrelevant data expire.
-
-## The vector database is the index, not the book
-
-Useful agent memory separates working context, episodic events, semantic facts, procedures, preferences and retrieval. RAG remains valuable as an access mechanism, combined with metadata, temporal queries, SQL, key-value state, graphs and business rules.
-
-The higher an agent's autonomy, the less tolerance there is for improvised memory. An agent should act because it recovered information that is valid, current, authorized and traceable—not merely because it found similar text.
-
-RAG retrieves. Memory interprets, updates, relates and forgets.`,
-    },
-    publishedAt: "2026-07-22",
-    status: "published",
-  },
-  {
     id: "ia-nao-conhece-projeto-readme",
     title: {
       pt: "A IA não conhece seu projeto só porque leu seu README",
@@ -789,12 +268,244 @@ In the end, the code always tells the complete story. The README remains importa
     status: "published",
   },
   {
+    id: "latencia-experiencia-usuario",
+    title: { pt: "Latência também é experiência do usuário", en: "Latency is part of the user experience" },
+    tag: "AGENTS",
+    excerpt: { pt: "Velocidade percebida, confiança e o silêncio entre uma ação e sua resposta.", en: "Perceived speed, trust and the silence between an action and its response." },
+    content: { pt: "Latência não é apenas um número no painel de observabilidade. Ela é uma sensação. Quando um agente demora para responder, o usuário não percebe filas, tokens ou chamadas externas — percebe hesitação. Projetar sistemas inteligentes também significa projetar esse intervalo: feedback imediato, estados honestos e respostas que chegam no ritmo certo.", en: "Latency is not only a number on an observability dashboard. It is a feeling. When an agent takes too long to respond, users do not see queues, tokens or external calls — they experience hesitation. Designing intelligent systems also means designing that interval: immediate feedback, honest states and responses arriving at the right rhythm." },
+    publishedAt: "2026-07-22",
+    status: "scheduled",
+  },
+  {
+    id: "llm-local-vale-a-pena",
+    title: {
+      pt: "LLM local vale a pena ou é só fetiche de homelab?",
+      en: "Are local LLMs worth it, or are they just a homelab fetish?",
+    },
+    tag: "LOCAL AI / HOMELAB",
+    excerpt: {
+      pt: "Privacidade, custo, conveniência e o prazer de manter uma GPU ocupada para fazer perguntas que uma API responderia em segundos.",
+      en: "Privacy, cost, convenience and the pleasure of keeping a GPU busy with questions an API could answer in seconds.",
+    },
+    content: {
+      pt: `Você abre um vídeo sobre inteligência artificial.
+
+Cinco minutos depois, alguém diz que você deveria instalar o Ollama.
+
+Mais alguns minutos e aparece um tutorial mostrando como baixar um modelo de 30 GB, configurar CUDA, escolher a quantização ideal, ajustar o número de camadas na GPU e, se tudo der certo, finalmente conversar com a IA.
+
+Se tudo der errado, você passa o resto do sábado procurando por que o modelo resolveu consumir toda a memória RAM.
+
+A impressão que fica é simples.
+
+Se você realmente leva IA a sério, precisa rodar um modelo local.
+
+Mas será mesmo?
+
+Ou estamos vivendo o equivalente moderno daquele servidor doméstico cheio de LEDs que consome energia o dia inteiro para hospedar um blog com dez visitas por mês?
+
+## O argumento da privacidade faz sentido
+
+Existe um motivo bastante legítimo para executar modelos localmente.
+
+Se os dados nunca saem da sua máquina, eles também nunca chegam a um servidor de terceiros.
+
+Para empresas que trabalham com propriedade intelectual, contratos, prontuários médicos ou código-fonte sensível, isso não é uma preferência.
+
+É um requisito.
+
+Nesse cenário, um LLM local deixa de ser uma curiosidade técnica e passa a fazer parte da arquitetura do sistema.
+
+E isso é completamente justificável.
+
+## Mas nem sempre é sobre privacidade
+
+Existe outro motivo que aparece com muito mais frequência do que as pessoas costumam admitir.
+
+É divertido.
+
+Montar um ambiente de IA local lembra bastante a cultura do homelab.
+
+Você aprende sobre GPUs, inferência, quantização, memória, containers, aceleração por hardware e otimização.
+
+Nada disso é perda de tempo.
+
+Nem tudo precisa gerar retorno financeiro.
+
+Às vezes, o laboratório é o hobby.
+
+E está tudo bem.
+
+O problema começa quando um hobby vira recomendação universal.
+
+## Nem todo problema precisa de uma RTX
+
+É curioso observar algumas discussões na internet.
+
+Alguém pergunta qual IA deveria usar.
+
+A resposta costuma ser algo próximo de:
+
+“Compra uma GPU de última geração e roda um modelo de 70 bilhões de parâmetros.”
+
+Como se essa fosse a solução padrão.
+
+Na prática, a maioria das pessoas quer escrever melhor, programar, resumir documentos ou automatizar tarefas repetitivas.
+
+Para esses casos, modelos hospedados ainda oferecem uma relação entre qualidade, custo e conveniência extremamente difícil de superar.
+
+Você abre o navegador.
+
+Começa a trabalhar.
+
+Sem instalar drivers.
+
+Sem atualizar CUDA.
+
+Sem baixar dezenas de gigabytes porque saiu uma versão nova do modelo.
+
+Sem descobrir, às duas da manhã, por que uma atualização resolveu quebrar tudo.
+
+## “Mas é de graça”
+
+Nem sempre.
+
+Quando alguém diz que um LLM local é gratuito, normalmente está olhando apenas para o custo por requisição.
+
+Mas existe outro custo que quase nunca entra na conversa.
+
+O computador.
+
+A placa de vídeo.
+
+A energia.
+
+O armazenamento.
+
+O tempo gasto configurando o ambiente.
+
+O tempo gasto mantendo esse ambiente funcionando.
+
+Se você gosta desse processo, ótimo.
+
+Ele faz parte da diversão.
+
+Mas se seu objetivo era apenas usar uma IA para trabalhar, talvez esse custo seja maior do que parece.
+
+## A pergunta errada
+
+Sempre que essa discussão aparece, ela costuma ser apresentada como uma escolha entre dois lados.
+
+Modelo local.
+
+Ou nuvem.
+
+Mas essa não é a pergunta mais interessante.
+
+A pergunta deveria ser outra.
+
+Que problema você está tentando resolver?
+
+Se a resposta for privacidade, provavelmente um modelo local faz sentido.
+
+Se for reduzir custos de um produto em escala, talvez também.
+
+Se for pesquisa, aprendizado ou simplesmente o prazer de montar um laboratório em casa, melhor ainda.
+
+Agora, se tudo o que você quer é uma IA confiável para responder perguntas, escrever código e ajudar no trabalho do dia a dia, talvez a solução mais eficiente continue sendo uma API.
+
+E não existe nada de errado nisso.
+
+## Ferramentas não são identidade
+
+Existe uma tendência curiosa na tecnologia.
+
+Transformamos ferramentas em personalidade.
+
+Quem usa Linux vira “o cara do Linux”.
+
+Quem monta teclado mecânico vira “o cara do teclado”.
+
+Quem tem rack em casa vira “o cara do homelab”.
+
+Com modelos locais, aconteceu exatamente a mesma coisa.
+
+De repente, rodar um LLM na própria máquina deixou de ser apenas uma decisão técnica.
+
+Virou quase um símbolo de pertencimento.
+
+Só que engenharia nunca foi sobre escolher um time.
+
+Ela sempre foi sobre resolver problemas da forma mais adequada.
+
+Às vezes essa solução envolve um cluster de GPUs.
+
+Às vezes envolve uma API.
+
+Às vezes envolve simplesmente aceitar que você não precisa reinventar toda a infraestrutura para fazer uma pergunta a um modelo de linguagem.
+
+No fim das contas, a melhor IA não é a que roda na sua máquina.
+
+Nem a que roda na nuvem.
+
+É aquela que resolve o problema e desaparece enquanto você trabalha.`,
+      en: `You open a video about artificial intelligence. Five minutes later, someone says you should install Ollama. Soon you are downloading a 30 GB model, configuring CUDA, choosing a quantization and deciding how many layers should fit on the GPU.
+
+If it works, you can finally talk to the model. If it does not, your Saturday becomes an investigation into where all your RAM went.
+
+The resulting message is simple: if you take AI seriously, you need to run it locally. But do you?
+
+## Privacy is a legitimate argument
+
+When data never leaves the machine, it never reaches a third-party server. For intellectual property, contracts, medical records or sensitive source code, this can be an architectural requirement rather than a preference.
+
+In those cases, a local LLM is completely justified.
+
+## Sometimes the laboratory is the hobby
+
+There is another honest reason to run models locally: it is fun. You learn about GPUs, inference, quantization, memory, containers and hardware acceleration.
+
+That is not wasted time. The problem begins when a rewarding hobby becomes a universal recommendation.
+
+## Not every problem needs an RTX
+
+Most people want help writing, programming, summarizing documents or automating repetitive work. Hosted models still offer a combination of quality, cost and convenience that is difficult to beat.
+
+You open a browser and begin working. No drivers, CUDA updates or overnight debugging sessions required.
+
+## “But it is free”
+
+Not always. The zero request price ignores the computer, GPU, electricity, storage, setup time and maintenance.
+
+If maintaining the environment is part of the fun, great. If the goal was simply to use AI at work, the real cost may be higher than it appears.
+
+## Ask what problem you are solving
+
+Local versus cloud is the wrong framing.
+
+Privacy may justify local inference. Product scale may justify it too. Research, learning and homelab enjoyment are equally valid reasons.
+
+But if you only need reliable help with questions, code and daily work, an API may still be the most efficient answer.
+
+## Tools are not identities
+
+Technology has a habit of turning tools into personalities. Local models have become another symbol of belonging.
+
+Engineering is not about choosing a team. It is about solving a problem appropriately—sometimes with a GPU cluster, sometimes with an API, and sometimes by refusing to rebuild infrastructure just to ask a language model a question.
+
+The best AI is neither the one on your machine nor the one in the cloud. It is the one that solves the problem and disappears while you work.`,
+    },
+    publishedAt: "2026-07-27",
+    status: "scheduled",
+  },
+  {
     id: "maquinas-com-presenca",
     title: { pt: "Máquinas com presença, não só respostas", en: "Machines with presence, not only answers" },
     tag: "AI / VOICE",
     excerpt: { pt: "A diferença entre uma ferramenta que responde e uma presença digital que acompanha.", en: "The difference between a tool that responds and a digital presence that stays with you." },
     content: { pt: "Presença não nasce de frases humanas simuladas. Ela aparece na continuidade: memória usada com cuidado, voz coerente, tempo de resposta, iniciativa e respeito ao contexto. Máquinas com presença não precisam fingir que são pessoas; precisam demonstrar que entenderam onde estão.", en: "Presence does not come from simulated human phrases. It appears through continuity: carefully used memory, a coherent voice, response timing, initiative and respect for context. Machines with presence do not need to pretend they are people; they need to show they understand where they are." },
-    publishedAt: "2026-07-27",
+    publishedAt: "2026-08-03",
     status: "scheduled",
   },
 ];
+
