@@ -272,7 +272,371 @@ In the end, the code always tells the complete story. The README remains importa
     title: { pt: "Latência também é experiência do usuário", en: "Latency is part of the user experience" },
     tag: "AGENTS",
     excerpt: { pt: "Velocidade percebida, confiança e o silêncio entre uma ação e sua resposta.", en: "Perceived speed, trust and the silence between an action and its response." },
-    content: { pt: "Latência não é apenas um número no painel de observabilidade. Ela é uma sensação. Quando um agente demora para responder, o usuário não percebe filas, tokens ou chamadas externas — percebe hesitação. Projetar sistemas inteligentes também significa projetar esse intervalo: feedback imediato, estados honestos e respostas que chegam no ritmo certo.", en: "Latency is not only a number on an observability dashboard. It is a feeling. When an agent takes too long to respond, users do not see queues, tokens or external calls — they experience hesitation. Designing intelligent systems also means designing that interval: immediate feedback, honest states and responses arriving at the right rhythm." },
+    content: {
+      pt: `Você envia uma mensagem para um agente de inteligência artificial.
+
+A interface mostra três pontinhos.
+
+Cinco segundos passam.
+
+Depois dez.
+
+Em algum momento, você deixa de pensar que o sistema está trabalhando e começa a pensar que ele quebrou.
+
+Talvez a requisição tenha falhado.
+
+Talvez a ferramenta esteja fora do ar.
+
+Talvez o agente tenha entrado em um loop tentando decidir se deveria consultar o banco, chamar uma API ou escrever uma resposta particularmente inspirada.
+
+O usuário não sabe.
+
+E esse é o problema.
+
+Para quem constrói o sistema, latência é um número. Pode ser medida em milissegundos, separada por serviço, distribuída em percentis e observada em um painel cheio de gráficos.
+
+Para quem utiliza o produto, latência é uma sensação.
+
+É o silêncio entre uma ação e a confirmação de que alguém — ou alguma coisa — ouviu.
+
+## O cronômetro não começa no servidor
+
+Quando falamos sobre desempenho, costumamos medir o tempo entre a chegada de uma requisição e a entrega de uma resposta.
+
+Essa medida é importante.
+
+Mas a experiência começa antes.
+
+Ela começa no clique.
+
+No instante em que o usuário pressiona um botão, envia uma mensagem ou pede para o agente executar uma tarefa, alguma coisa precisa acontecer.
+
+Não necessariamente a resposta completa.
+
+Um botão pode mudar de estado.
+
+Uma linha pode aparecer no terminal.
+
+Uma etapa pode ser marcada como iniciada.
+
+O sistema pode simplesmente dizer:
+
+“Entendi. Estou verificando isso.”
+
+Essa primeira reação não reduz a latência real da operação.
+
+Mas reduz a distância entre a ação do usuário e a percepção de que o sistema começou a trabalhar.
+
+E essa distância importa muito.
+
+## O silêncio inventa histórias
+
+Interfaces silenciosas obrigam o usuário a interpretar o que está acontecendo.
+
+E usuários raramente interpretam silêncio de forma otimista.
+
+Se nada muda depois de um clique, a primeira reação costuma ser clicar novamente.
+
+Depois atualizar a página.
+
+Depois concluir que o produto é lento, instável ou simplesmente ruim.
+
+Enquanto isso, o backend pode estar funcionando perfeitamente.
+
+A fila recebeu a tarefa.
+
+O modelo está gerando.
+
+A ferramenta externa respondeu.
+
+O sistema só esqueceu de contar essa história para quem está esperando.
+
+Esse é um erro de experiência, não apenas de infraestrutura.
+
+Um processo pode levar vinte segundos e ainda parecer confiável quando o usuário entende por que está esperando.
+
+Outro pode levar quatro segundos e parecer quebrado quando não existe qualquer sinal de progresso.
+
+Latência percebida não depende apenas de quanto tempo passou.
+
+Depende da quantidade de incerteza acumulada durante esse tempo.
+
+## Agentes tornam o problema mais complicado
+
+Em aplicações tradicionais, uma ação costuma produzir um caminho relativamente previsível.
+
+O usuário envia um formulário.
+
+O servidor valida os dados.
+
+O banco salva.
+
+A interface confirma.
+
+Agentes não são tão educados.
+
+Eles podem planejar, buscar contexto, chamar ferramentas, revisar a própria resposta, falhar em uma integração, tentar novamente e descobrir no meio do caminho que a tarefa era mais complexa do que parecia.
+
+Ou seja: a latência deixa de ser apenas maior.
+
+Ela também se torna variável.
+
+A mesma pergunta pode levar dois segundos agora e quinze segundos depois.
+
+A mesma ação pode exigir uma ferramenta em uma execução e quatro na seguinte.
+
+Para o usuário, essa irregularidade parece hesitação.
+
+O agente parece não saber o que está fazendo, mesmo quando está seguindo exatamente o fluxo planejado.
+
+É por isso que sistemas agentic precisam tratar execução como parte da interface.
+
+Não basta mostrar a resposta final.
+
+É preciso dar forma ao caminho até ela.
+
+## Feedback não é decoração
+
+Existe uma diferença entre informar progresso e simular atividade.
+
+Uma animação genérica dizendo “pensando” pode funcionar por alguns segundos.
+
+Depois disso, ela perde valor.
+
+O usuário não quer assistir a um spinner filosofando sobre a própria existência.
+
+Ele quer saber se alguma coisa avançou.
+
+Mensagens como:
+
+* analisando os arquivos relacionados
+* consultando o histórico do projeto
+* aguardando resposta do serviço externo
+* validando a alteração
+
+são úteis porque transformam uma espera abstrata em etapas compreensíveis.
+
+Mas essas mensagens precisam ser verdadeiras.
+
+Inventar progresso é pior do que não mostrar progresso.
+
+Se a interface diz “validando o resultado” enquanto a requisição ainda está parada em uma fila, o produto está apenas produzindo uma mentira mais bonita.
+
+Feedback é um contrato.
+
+Quando o sistema mostra uma etapa, ele assume que aquela etapa realmente existe.
+
+## Streaming ajuda, mas não resolve tudo
+
+Transmitir a resposta token por token se tornou a solução padrão para latência em produtos com IA.
+
+Faz sentido.
+
+O usuário começa a receber conteúdo antes que a geração termine, e o sistema parece vivo.
+
+Mas streaming não é uma cura universal.
+
+Se o primeiro token demora quinze segundos, continuamos tendo quinze segundos de silêncio.
+
+Se o agente precisa executar ferramentas antes de responder, não existe texto útil para transmitir durante boa parte do processo.
+
+E se a resposta começa rápido, mas avança lentamente demais, o usuário pode terminar de ler uma frase e ficar esperando a próxima como quem acompanha uma impressora matricial escrevendo um contrato.
+
+Streaming melhora a entrega.
+
+Não substitui uma boa modelagem de estados.
+
+Antes do primeiro token, a interface ainda precisa dizer que recebeu a ação.
+
+Durante o uso de ferramentas, precisa mostrar progresso sem expor raciocínio privado ou detalhes técnicos inúteis.
+
+Depois da resposta, precisa deixar claro se a tarefa terminou, falhou parcialmente ou ainda possui etapas em andamento.
+
+## Mais rápido nem sempre significa melhor
+
+Existe também o erro oposto.
+
+Na tentativa de reduzir latência, sacrificamos qualidade.
+
+Pulamos validações.
+
+Diminuímos contexto.
+
+Escolhemos um modelo inadequado.
+
+Respondemos antes de consultar a fonte que realmente importava.
+
+O resultado chega em um segundo.
+
+E está errado.
+
+Uma resposta rápida e incorreta não é uma boa experiência.
+
+É apenas um erro entregue com eficiência.
+
+O objetivo não deveria ser minimizar cada milissegundo isoladamente.
+
+Deveria ser encontrar o menor tempo possível para uma resposta em que o usuário possa confiar.
+
+Em algumas tarefas, isso significa responder imediatamente.
+
+Em outras, significa assumir:
+
+“Isso vai levar um pouco mais de tempo porque preciso verificar três fontes.”
+
+Honestidade também reduz ansiedade.
+
+Quando a expectativa está correta, a espera deixa de parecer um defeito inesperado.
+
+## Orçamentos de latência também são decisões de produto
+
+Nem toda interação merece o mesmo tempo.
+
+Uma busca simples deveria parecer instantânea.
+
+Uma alteração em produção pode levar mais tempo porque precisa ser validada.
+
+Uma análise extensa pode justificar minutos, desde que o usuário possa continuar fazendo outra coisa e seja avisado quando terminar.
+
+Por isso, um bom sistema não possui apenas um orçamento técnico de latência.
+
+Ele possui um orçamento de experiência.
+
+Quanto tempo pode passar antes do primeiro feedback?
+
+Quando uma etapa precisa ser exibida?
+
+Depois de quanto tempo oferecemos cancelamento?
+
+O usuário pode sair da tela sem perder a tarefa?
+
+Se uma ferramenta falhar, mostramos o resultado parcial ou descartamos tudo?
+
+Essas perguntas não aparecem em um gráfico de tempo de resposta.
+
+Mas determinam se o produto parece confiável.
+
+## A melhor espera é aquela que respeita o usuário
+
+Nem toda operação pode ser instantânea.
+
+Modelos levam tempo.
+
+APIs oscilam.
+
+Filas existem.
+
+Redes falham.
+
+O problema não é fazer o usuário esperar.
+
+O problema é fazê-lo esperar sem contexto, sem controle e sem saber se existe alguma coisa do outro lado.
+
+Latência também é experiência do usuário porque tempo, em uma interface, nunca é apenas tempo.
+
+É confiança.
+
+É expectativa.
+
+É a diferença entre um sistema que parece estar trabalhando e outro que parece ter abandonado a conversa.
+
+No fim, o usuário não precisa conhecer sua fila, seu provedor de inferência ou quantas ferramentas o agente chamou.
+
+Ele só precisa sentir que sua ação foi recebida, que existe progresso real e que o produto será honesto sobre o resultado.
+
+Mesmo quando a resposta ainda está a alguns segundos de distância.`,
+      en: `You send a message to an AI agent.
+
+The interface shows three dots.
+
+Five seconds pass. Then ten.
+
+At some point, you stop thinking the system is working and start wondering whether it broke.
+
+The user cannot see queues, model calls, retries or external tools. They only experience the silence between an action and the confirmation that something heard them.
+
+For engineers, latency is a number. For users, it is a feeling.
+
+## The clock does not start at the server
+
+Performance is often measured from the moment a request reaches the backend until a response leaves it. That matters, but the experience begins earlier: at the click.
+
+As soon as someone submits a message or asks an agent to perform a task, the interface needs to react. It does not need the complete answer yet. A button can change state, a terminal line can appear, or the system can simply say that the request was received.
+
+This does not reduce real latency. It reduces the distance between the user's action and the perception that work has begun.
+
+## Silence invents stories
+
+Silent interfaces force users to interpret what is happening, and they rarely interpret silence optimistically.
+
+They click again, refresh the page and eventually decide that the product is slow or broken. Meanwhile, the backend may be working perfectly. The system simply forgot to tell that story to the person waiting.
+
+A twenty-second process can feel trustworthy when its progress is understandable. A four-second process can feel broken when it provides no signal at all.
+
+Perceived latency depends not only on elapsed time, but on the uncertainty accumulated during that time.
+
+## Agents make latency variable
+
+Traditional applications tend to follow predictable paths. Agents can plan, retrieve context, call tools, retry failed integrations and discover halfway through that a task is more complicated than expected.
+
+Latency is therefore not only longer. It is variable.
+
+The same request may take two seconds now and fifteen seconds later. To a user, that inconsistency feels like hesitation—even when the agent is following its intended workflow.
+
+Agentic systems need to treat execution as part of the interface. Showing only the final answer is not enough; the path to that answer needs a shape.
+
+## Feedback is a contract
+
+There is a difference between reporting progress and simulating activity.
+
+A generic “thinking” animation helps for a few seconds. After that, users need meaningful states: analysing relevant files, waiting for an external service, validating a change.
+
+Those states must be true. Invented progress is worse than no progress at all.
+
+When an interface displays a step, it promises that the step actually exists.
+
+## Streaming helps, but it is not a cure
+
+Streaming tokens makes AI products feel responsive because content arrives before generation finishes. But if the first token takes fifteen seconds, there are still fifteen seconds of silence.
+
+Tool calls may also happen before any useful text exists, and a response that starts quickly but advances painfully slowly can still feel frustrating.
+
+Streaming improves delivery. It does not replace honest states before, during and after execution.
+
+## Faster is not always better
+
+Latency work can go too far. Teams skip validation, reduce useful context or choose the wrong model just to return something sooner.
+
+The result arrives in one second—and it is wrong.
+
+A fast incorrect answer is not a good experience. It is simply an error delivered efficiently.
+
+The goal is not to minimise every millisecond in isolation. It is to find the shortest time that still produces an answer the user can trust.
+
+Sometimes that means replying immediately. Sometimes it means being honest: this will take longer because several sources need to be checked.
+
+## Latency budgets are product decisions
+
+Not every interaction deserves the same amount of time.
+
+A simple search should feel immediate. A production change may take longer because it needs validation. A deep analysis may justify minutes if users can leave the screen and receive a notification when it finishes.
+
+Good systems need an experience budget as well as a technical latency budget.
+
+How long can pass before the first feedback? When should steps become visible? When should cancellation be offered? Can users leave without losing the task? Should partial results survive a tool failure?
+
+Those questions do not appear in a response-time chart, but they determine whether a product feels reliable.
+
+## Respect the person who is waiting
+
+Not every operation can be instant. Models take time, APIs fluctuate, queues exist and networks fail.
+
+The problem is not making users wait. The problem is making them wait without context, control or any evidence that something exists on the other side.
+
+Latency is part of the user experience because time in an interface is never only time. It is trust, expectation and the difference between a system that appears to be working and one that appears to have abandoned the conversation.
+
+Users do not need to know about your queue or inference provider. They only need to feel that their action was received, that real progress exists and that the product will be honest about the result—even when the answer is still a few seconds away.`,
+    },
     publishedAt: "2026-07-22",
     status: "scheduled",
   },
