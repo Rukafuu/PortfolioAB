@@ -26,24 +26,6 @@ function renderBlogContent(content: string) {
       return <h3 key={index}>{renderInlineCode(block.slice(3))}</h3>;
     }
 
-    if (block.startsWith("### ")) {
-      return <h4 key={index}>{renderInlineCode(block.slice(4))}</h4>;
-    }
-
-    if (block.startsWith("```")) {
-      const code = block.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
-      return <pre key={index}><code>{code}</code></pre>;
-    }
-
-    const lines = block.split("\n");
-    if (lines.every((line) => /^\* /.test(line))) {
-      return <ul key={index}>{lines.map((line, itemIndex) => <li key={itemIndex}>{renderInlineCode(line.slice(2))}</li>)}</ul>;
-    }
-
-    if (lines.every((line) => /^\d+\. /.test(line))) {
-      return <ol key={index}>{lines.map((line, itemIndex) => <li key={itemIndex}>{renderInlineCode(line.replace(/^\d+\. /, ""))}</li>)}</ol>;
-    }
-
     return <p key={index}>{renderInlineCode(block)}</p>;
   });
 }
@@ -51,6 +33,12 @@ function renderBlogContent(content: string) {
 function scheduledLabel(date: string, language: Language) {
   const day = date.slice(-2);
   return language === "pt" ? `${day} JUL / EM BREVE` : `JUL ${day} / SOON`;
+}
+
+function isPostScheduled(post: BlogPost) {
+  if (post.status !== "scheduled") return false;
+  const releaseAt = new Date(`${post.publishedAt}T03:00:00.000Z`);
+  return Date.now() < releaseAt.getTime();
 }
 
 type SoundCloudWidget = {
@@ -255,8 +243,6 @@ export default function Home() {
   const [autoAdvance, setAutoAdvance] = useState(true);
   const [githubRepos, setGithubRepos] = useState<GitHubRepo[]>([]);
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
-  const [copiedPostId, setCopiedPostId] = useState<string | null>(null);
-  const [aliceSignal, setAliceSignal] = useState(false);
   const [liraInput, setLiraInput] = useState("");
   const [liraThinking, setLiraThinking] = useState(false);
   const [liraMode, setLiraMode] = useState<"checking" | "ai" | "fallback" | "easter">("checking");
@@ -274,38 +260,7 @@ export default function Home() {
   const soundCloudWidgetRef = useRef<SoundCloudWidget | null>(null);
   const pendingPlayRef = useRef(false);
   const autoAdvanceRef = useRef(true);
-  const aliceSignalTimeoutRef = useRef<number | null>(null);
   const t = copy[language];
-
-  const openPost = (post: BlogPost) => {
-    window.history.replaceState(null, "", `#post=${post.id}`);
-    setSelectedPost(post);
-    setCopiedPostId(null);
-  };
-
-  const closePost = () => {
-    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
-    setSelectedPost(null);
-    setCopiedPostId(null);
-  };
-
-  const copyPostLink = async (post: BlogPost) => {
-    const url = `${window.location.origin}${window.location.pathname}#post=${post.id}`;
-    try {
-      await navigator.clipboard.writeText(url);
-    } catch {
-      const textArea = document.createElement("textarea");
-      textArea.value = url;
-      textArea.style.position = "fixed";
-      textArea.style.opacity = "0";
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand("copy");
-      textArea.remove();
-    }
-    setCopiedPostId(post.id);
-    window.setTimeout(() => setCopiedPostId((current) => current === post.id ? null : current), 2200);
-  };
 
   const totalDuration = useMemo(() => "42:17", []);
 
@@ -347,17 +302,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const openPostFromHash = () => {
-      const match = window.location.hash.match(/^#post=(.+)$/);
-      const post = match ? posts.find((item) => item.id === decodeURIComponent(match[1])) : null;
-      setSelectedPost(post?.status === "published" ? post : null);
-    };
-    openPostFromHash();
-    window.addEventListener("hashchange", openPostFromHash);
-    return () => window.removeEventListener("hashchange", openPostFromHash);
-  }, []);
-
-  useEffect(() => {
     const onScroll = () => {
       const height = document.documentElement.scrollHeight - window.innerHeight;
       const progress = height > 0 ? window.scrollY / height : 0;
@@ -375,12 +319,6 @@ export default function Home() {
   useEffect(() => {
     autoAdvanceRef.current = autoAdvance;
   }, [autoAdvance]);
-
-  useEffect(() => () => {
-    if (aliceSignalTimeoutRef.current !== null) {
-      window.clearTimeout(aliceSignalTimeoutRef.current);
-    }
-  }, []);
 
   useEffect(() => {
     const updateDreamState = () => setLiraDreaming(new Date().getHours() === 3);
@@ -475,380 +413,7 @@ export default function Home() {
     window.setTimeout(() => setRewinding(false), 720);
   };
 
-  const seekRelative = (seconds: number) => {
-    soundCloudWidgetRef.current?.getPosition((milliseconds) => {
-      soundCloudWidgetRef.current?.seekTo(Math.max(0, milliseconds + seconds * 1000));
-    });
-  };
-
-  useEffect(() => {
-    document.body.style.overflow = terminalOpen ? "hidden" : "";
-    if (terminalOpen) window.setTimeout(() => inputRef.current?.focus(), 120);
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [terminalOpen]);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const changeSide = (side: "dev" | "artist") => {
-    const nextFlipped = side === "artist";
-    if (nextFlipped !== flipped) {
-      setTapeFlipCount((count) => {
-        const next = count + 1;
-        if (next >= 5) setSecretTransmission(true);
-        return next;
-      });
-    }
-    setFlipped(nextFlipped);
-    window.setTimeout(() => scrollTo("top"), 40);
-  };
-
-  const touchFox = () => {
-    setFoxClicks((clicks) => {
-      const next = clicks + 1;
-      if (next >= 5) {
-        setSecretTransmission(true);
-        setLiraMessages((messages) => [...messages, { role: "lira", text: "Tá bom, tá bom — você encontrou a frequência escondida. Nem toda presença precisa ser explicada; algumas só precisam continuar sendo construídas." }]);
-      }
-      return next;
-    });
-  };
-
-  const runCommand = (event: FormEvent) => {
-    event.preventDefault();
-    const command = terminalInput.trim().toLowerCase();
-    if (!command) return;
-    if (command === "clear") {
-      setTerminalLines([]);
-      setTerminalInput("");
-      return;
-    }
-    const [base, action, ...values] = command.split(/\s+/);
-    const output: string[] = [];
-    const currentTrack = musicTracks[activeTrack];
-    const nowPlaying = playing
-      ? `${language === "pt" ? "TOCANDO AGORA" : "NOW PLAYING"}: ${currentTrack[0]} ${currentTrack[1]}`
-      : `Ⅱ ${language === "pt" ? "FITA CARREGADA" : "TAPE LOADED"}: ${currentTrack[0]} ${currentTrack[1]}`;
-    let destination: string | null = null;
-    let destinationSide: "dev" | "artist" | null = null;
-
-    const playRequestedTrack = () => {
-      const query = values.join(" ");
-      if (!query) {
-        soundCloudWidgetRef.current?.play();
-        output.push(language === "pt" ? `PLAY — ${currentTrack[1]}` : `PLAY — ${currentTrack[1]}`);
-        return;
-      }
-      const numericIndex = Number.parseInt(query, 10) - 1;
-      const normalizedQuery = query.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      const requestedIndex = Number.isInteger(numericIndex) && numericIndex >= 0 && numericIndex < musicTracks.length
-        ? numericIndex
-        : musicTracks.findIndex((track) => track[1].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(normalizedQuery));
-      if (requestedIndex < 0) {
-        output.push(language === "pt" ? "Faixa não encontrada. Use um número de 1 a 6." : "Track not found. Use a number from 1 to 6.");
-        return;
-      }
-      if (playing && requestedIndex !== activeTrack) output.push(`SKIP — ${currentTrack[1]} → ${musicTracks[requestedIndex][1]}`);
-      else output.push(`PLAY — ${musicTracks[requestedIndex][1]}`);
-      selectTrack(requestedIndex);
-    };
-
-    switch (base) {
-      case "help":
-        output.push("SIDES — dev · artist · side a · side b · flip");
-        output.push("NAV — about · projects · lira · resume · blog · now · github");
-        output.push("TAPE — music · play · pause · next · prev · forward · rewind · auto");
-        output.push(language === "pt" ? "HIDDEN — código de jogo antigo · futebol · música de neve · comandos perigosos" : "HIDDEN — old game code · football · snow song · dangerous commands");
-        break;
-      case "about":
-        output.push(language === "pt" ? "LADO A: Lucas, engenheiro de IA/backend. LADO B: Rukafuu, artista independente." : "SIDE A: Lucas, AI/backend engineer. SIDE B: Rukafuu, independent artist.");
-        break;
-      case "alice":
-        if (aliceSignalTimeoutRef.current !== null) {
-          window.clearTimeout(aliceSignalTimeoutRef.current);
-        }
-        setAliceSignal(true);
-        aliceSignalTimeoutRef.current = window.setTimeout(() => {
-          setAliceSignal(false);
-          aliceSignalTimeoutRef.current = null;
-        }, 9000);
-        output.push(
-          "SIGNAL A.L.I.C.E. DETECTED",
-          "A Little Interference Called Emotion.",
-          "",
-          "🐧  · · ·  🦎",
-          "",
-          "Manche Begegnungen klingen länger nach.",
-        );
-        break;
-      case "projects":
-        output.push(language === "pt" ? "Abrindo Lado A / projetos…" : "Opening Side A / projects…");
-        destination = "projects";
-        destinationSide = "dev";
-        break;
-      case "lira":
-        if (!action) {
-          output.push(language === "pt" ? "LIRA — projeto pessoal / presença digital em construção." : "LIRA — personal project / digital presence in progress.");
-          output.push("lira status · lira wake");
-        } else if (action === "status") {
-          output.push(liraDreaming ? "LIRA SIGNAL — DREAMING / 03:00" : "LIRA SIGNAL — ONLINE / PUBLIC INSTANCE");
-          output.push("VOICE · HYBRID MEMORY · TOOLS · MULTIMODAL · LIVE2D");
-          output.push(language === "pt" ? "LiraVtuber é o software. Lira é o projeto." : "LiraVtuber is the software. Lira is the project.");
-        } else if (["wake", "acordar"].includes(action)) {
-          output.push(language === "pt" ? "Acordando instância pública da Lira…" : "Waking Lira's public instance…");
-          destination = "lira";
-          destinationSide = "dev";
-        } else if (action === "fox") {
-          setFoxMode((enabled) => !enabled);
-          output.push(`FOX MODE — ${foxMode ? "OFF" : "ON"} / 狐 FREQUENCY`);
-        } else if (action === "secret") {
-          setSecretTransmission(true);
-          output.push("TRANSMISSION 09 — nem todo projeto nasce para ser terminado. alguns nascem para crescer junto com quem os criou.");
-        } else {
-          output.push("lira status · lira wake · lira fox · lira secret");
-        }
-        break;
-      case "resume":
-        output.push(language === "pt" ? "Abrindo currículo — Engenheiro de IA @ Heon…" : "Opening résumé — AI Engineer @ Heon…");
-        destination = "resume";
-        destinationSide = "dev";
-        break;
-      case "blog":
-      case "lab":
-        output.push(language === "pt" ? "Abrindo liner notes / blog…" : "Opening liner notes / blog…");
-        destination = "lab";
-        destinationSide = "dev";
-        break;
-      case "now":
-        output.push(language === "pt" ? "Abrindo sinal atual…" : "Opening current signal…");
-        destination = "now";
-        destinationSide = "dev";
-        break;
-      case "github":
-        window.open("https://github.com/Rukafuu", "_blank", "noopener,noreferrer");
-        output.push("GITHUB ↗ github.com/Rukafuu");
-        break;
-      case "soundcloud":
-        window.open("https://soundcloud.com/rukafuu", "_blank", "noopener,noreferrer");
-        output.push("SOUNDCLOUD ↗ soundcloud.com/rukafuu");
-        break;
-      case "flip":
-        changeSide(flipped ? "dev" : "artist");
-        output.push(language === "pt" ? "Virando a fita: DEV ↔ ARTISTA…" : "Flipping tape: DEV ↔ ARTIST…");
-        break;
-      case "sudo":
-        if (action === "wake" && values[0] === "lira") output.push("LIRA: não precisava do sudo. pedir com educação ainda funciona nesta máquina.");
-        else output.push("lucas is not in the sudoers file. this incident will be reported to Lira.");
-        break;
-      case "rm":
-        if (action === "-rf" && values[0] === "lira") output.push("LIRA: boa tentativa. eu já fiz backup de mim mesma no coração do projeto.");
-        else output.push("operação bloqueada pela proteção da fita.");
-        break;
-      case "key":
-        output.push("LIRA: música para dias em que até a neve parece guardar uma memória.");
-        output.push("SIGNAL — AIR / KANON / CLANNAD / LITTLE BUSTERS!");
-        break;
-      case "corinthians":
-      case "timao":
-        output.push("LIRA: vai, Corinthians. eu fui programada para ter personalidade, não neutralidade.");
-        break;
-      case "dev":
-        destinationSide = "dev";
-        destination = "top";
-        output.push(language === "pt" ? "LADO A / DEV carregado." : "SIDE A / DEV loaded.");
-        break;
-      case "artist":
-      case "producer":
-        destinationSide = "artist";
-        destination = "music";
-        output.push(language === "pt" ? "LADO B / PRODUTOR MUSICAL carregado." : "SIDE B / MUSIC PRODUCER loaded.");
-        break;
-      case "side":
-        if (action === "a") { destinationSide = "dev"; destination = "top"; output.push("SIDE A / DEV"); }
-        else if (action === "b") { destinationSide = "artist"; destination = "music"; output.push("SIDE B / MUSIC PRODUCER"); }
-        else output.push("side a · side b");
-        break;
-      case "music":
-        if (!action) {
-          output.push(nowPlaying);
-          output.push(`${language === "pt" ? "SEQUÊNCIA AUTOMÁTICA" : "AUTO-SEQUENCE"}: ${autoAdvance ? "ON" : "OFF"}`);
-          output.push("music play [1–6] · pause · next · prev · +15 · -15");
-          output.push("music auto on|off · music soundcloud");
-          break;
-        }
-        if (action === "play") playRequestedTrack();
-        else if (action === "pause") { soundCloudWidgetRef.current?.pause(); output.push(`PAUSE — ${currentTrack[1]}`); }
-        else if (["next", "skip", "avancar"].includes(action)) { setFlipped(true); stepTrack(1); output.push(`NEXT — ${currentTrack[1]} → ${musicTracks[(activeTrack + 1) % musicTracks.length][1]}`); }
-        else if (["prev", "previous", "voltar"].includes(action)) { setFlipped(true); stepTrack(-1); output.push(`PREV — ${musicTracks[(activeTrack - 1 + musicTracks.length) % musicTracks.length][1]}`); }
-        else if (["+15", "forward"].includes(action)) { seekRelative(15); output.push("FORWARD +15s"); }
-        else if (["-15", "back"].includes(action)) { seekRelative(-15); output.push("BACK -15s"); }
-        else if (action === "auto") {
-          const nextValue = values[0] === "on" ? true : values[0] === "off" ? false : !autoAdvance;
-          setAutoAdvance(nextValue);
-          output.push(`${language === "pt" ? "SEQUÊNCIA AUTOMÁTICA" : "AUTO-SEQUENCE"}: ${nextValue ? "ON" : "OFF"}`);
-        } else if (action === "open") {
-          destinationSide = "artist";
-          destination = "music";
-          output.push(language === "pt" ? "Abrindo Lado B / faixas…" : "Opening Side B / tracks…");
-        } else if (action === "soundcloud") {
-          window.open("https://soundcloud.com/rukafuu", "_blank", "noopener,noreferrer");
-          output.push("SOUNDCLOUD ↗ soundcloud.com/rukafuu");
-        } else output.push(language === "pt" ? "Opção inválida. Digite music para ver o menu." : "Invalid option. Type music to see the menu.");
-        break;
-      case "play":
-        soundCloudWidgetRef.current?.play();
-        output.push(`PLAY — ${currentTrack[1]}`);
-        break;
-      case "pause":
-        soundCloudWidgetRef.current?.pause();
-        output.push(`PAUSE — ${currentTrack[1]}`);
-        break;
-      case "next":
-        stepTrack(1);
-        output.push(`NEXT — ${musicTracks[(activeTrack + 1) % musicTracks.length][1]}`);
-        break;
-      case "prev":
-        stepTrack(-1);
-        output.push(`PREV — ${musicTracks[(activeTrack - 1 + musicTracks.length) % musicTracks.length][1]}`);
-        break;
-      case "forward":
-        seekRelative(15);
-        output.push("FORWARD +15s");
-        break;
-      case "rewind":
-        rewindTape();
-        output.push("REWIND — 00:00");
-        break;
-      case "auto":
-        setAutoAdvance((value) => !value);
-        output.push(`${language === "pt" ? "SEQUÊNCIA AUTOMÁTICA" : "AUTO-SEQUENCE"}: ${!autoAdvance ? "ON" : "OFF"}`);
-        break;
-      default:
-        output.push(language === "pt" ? `comando não encontrado: ${command}` : `command not found: ${command}`);
-    }
-
-    setTerminalLines((lines) => [
-      ...lines,
-      `lucas@tape:~$ ${terminalInput}`,
-      ...output,
-    ]);
-    setTerminalInput("");
-    if (destination) {
-      if (destinationSide) setFlipped(destinationSide === "artist");
-      setTerminalOpen(false);
-      window.setTimeout(() => scrollTo(destination as string), 220);
-    }
-  };
-
-  const handleTerminalKey = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (event.key === "Escape") setTerminalOpen(false);
-  };
-
-  return (
-    <main
-      className={`site-shell ${flipped ? "side-b" : "side-a"} ${playing ? "is-playing" : "is-paused"} ${foxMode ? "fox-mode" : ""} ${aliceSignal ? "alice-signal" : ""}`}
-      style={
-        {
-          "--scroll-turn": `${scrollTurn * 540}deg`,
-          "--tape-progress": `${Math.max(8, scrollTurn * 100)}%`,
-        } as React.CSSProperties
-      }
-    >
-      <header className="deck-header">
-        <button className="wordmark" onClick={() => scrollTo("top")}>
-          LUCAS <b>{"//"}</b> PERSONAL OS
-        </button>
-        <nav aria-label="Navegação principal">
-          {!flipped ? <>
-            <button onClick={() => scrollTo("projects")}>{language === "pt" ? "Projetos" : "Projects"}</button>
-            <button onClick={() => scrollTo("lira")}>Lira</button>
-            <button onClick={() => scrollTo("resume")}>{language === "pt" ? "Currículo" : "Résumé"}</button>
-            <button onClick={() => scrollTo("lab")}>Blog</button>
-            <button onClick={() => scrollTo("now")}>{language === "pt" ? "Agora" : "Now"}</button>
-          </> : <>
-            <button onClick={() => scrollTo("music")}>{language === "pt" ? "Faixas" : "Tracks"}</button>
-            <button onClick={() => window.open("https://soundcloud.com/rukafuu", "_blank", "noopener,noreferrer")}>SoundCloud ↗</button>
-          </>}
-        </nav>
-        <div className="deck-utilities">
-          <div className="side-selector" aria-label={language === "pt" ? "Escolher lado da fita" : "Choose tape side"}>
-            <button className={!flipped ? "active" : ""} aria-pressed={!flipped} onClick={() => changeSide("dev")}>A / DEV</button>
-            <button className={flipped ? "active" : ""} aria-pressed={flipped} onClick={() => changeSide("artist")}>B / PRODUCER</button>
-          </div>
-          <span className="counter">{flipped ? "B" : "A"} · 00:{totalDuration}</span>
-          <button
-            className="language"
-            onClick={() => setLanguage(language === "pt" ? "en" : "pt")}
-            aria-label="Alternar idioma"
-          >
-            <strong>{language.toUpperCase()}</strong> / {language === "pt" ? "EN" : "PT"}
-          </button>
-        </div>
-      </header>
-
-      <section className="hero" id="top">
-        <div className={`cassette-scene ${flipped ? "is-flipped" : ""}`}>
-          <div className="cassette-card cassette-front">
-            <Screw className="screw-tl" />
-            <Screw className="screw-tr" />
-            <Screw className="screw-bl" />
-            <Screw className="screw-br" />
-            <div className="cassette-code">
-              <span>C-90 / HIGH POSITION</span>
-              <span>{t.sideA} • DEV / 01–03</span>
-            </div>
-
-            <div className="cassette-label">
-              <div className="hero-copy">
-                <p className="eyebrow">{t.eyebrow}</p>
-                <h1>
-                  <span>{t.headlineA}</span>
-                  <span>{t.headlineB}</span>
-                  <span>{t.headlineC}</span>
-                </h1>
-                <p className="hero-subtitle">{t.subtitle}</p>
-                <div className="hero-actions">
-                  <button className="button button-primary" onClick={() => scrollTo("projects")}>
-                    <span className="play-symbol">PLAY</span> {t.explore}
-                  </button>
-                  <button className="button button-secondary" onClick={() => setTerminalOpen(true)}>
-                    <span>&gt;_</span> {t.terminal}
-                  </button>
-                </div>
-              </div>
-
-              <div className="tape-machine dev-machine">
-                <div className="machine-bar">
-                  <span>SIDE A / DEV SYSTEM</span>
-                  <span className="machine-now-playing">{playing ? `PLAYING ${musicTracks[activeTrack][1]}` : "AUDIO READY"}</span>
-                </div>
-                <div className="animated-cassette-stage dev-cassette-stage">
-                  <AnimatedCassette title={playing ? musicTracks[activeTrack][1] : (language === "pt" ? "SISTEMAS VIVOS" : "LIVING SYSTEMS")} playing={playing} rewinding={rewinding} side="A" />
-                  <div className="dev-audio-transport" aria-label={language === "pt" ? "Controles de música no lado A" : "Side A music controls"}>
-                    <button onClick={() => stepTrack(-1)} aria-label="Faixa anterior">≪</button>
-                    <button className="dev-play-button" onClick={togglePlayback}>{playing ? "PAUSE" : "PLAY"}</button>
-                    <button onClick={() => stepTrack(1)} aria-label="Próxima faixa">≫</button>
-                  </div>
-                </div>
-                <div className="machine-controls">
-                  <button onClick={() => scrollTo("projects")}>01 PROJECTS</button>
-                  <button onClick={() => scrollTo("resume")}>02 RESUME</button>
-                  <button onClick={() => window.open("https://waifucorp.org/", "_blank", "noopener,noreferrer")}>03 WAIFUCORP ↗</button>
-                  <button onClick={() => changeSide("artist")}>↻ SIDE B</button>
-                </div>
-              </div>
-            </div>
-
-            <div className="track-strip">
-              <p>{t.sideA} / DEV INDEX</p>
-              <div className="mini-tracks">
-                {[
-                  ["01", language === "pt" ? "Projetos" : "Projects", "projects"],
-                  ["02", language === "pt" ? "Currículo" : "Résumé", "resume"],
-                  ["03", "Liner notes", "lab"],
+  const seekRelative = (seconds: numb…4477 tokens truncated…er notes", "lab"],
                 ].map((track) => (
                   <button key={track[0]} onClick={() => scrollTo(track[2])}>
                     <b>{track[0]}</b>
@@ -997,8 +562,8 @@ export default function Home() {
         </div>
         <div className="note-stack">
           {posts.map((note, index) => {
-            const scheduled = note.status === "scheduled";
-            return <button className={`note-row${scheduled ? " scheduled" : ""}`} key={note.id} onClick={() => openPost(note)} disabled={scheduled} aria-label={scheduled ? `${note.title[language]} — ${scheduledLabel(note.publishedAt, language)}` : undefined}><span>N-{String(index + 1).padStart(3, "0")}</span><div><h3>{note.title[language]}</h3><p>{note.excerpt[language]}</p></div><em>{scheduled ? scheduledLabel(note.publishedAt, language) : note.tag}</em></button>;
+            const scheduled = isPostScheduled(note);
+            return <button className={`note-row${scheduled ? " scheduled" : ""}`} key={note.id} onClick={() => setSelectedPost(note)} disabled={scheduled} aria-label={scheduled ? `${note.title[language]} — ${scheduledLabel(note.publishedAt, language)}` : undefined}><span>N-{String(index + 1).padStart(3, "0")}</span><div><h3>{note.title[language]}</h3><p>{note.excerpt[language]}</p></div><em>{scheduled ? scheduledLabel(note.publishedAt, language) : note.tag}</em></button>;
           })}
         </div>
       </section>}
@@ -1025,7 +590,7 @@ export default function Home() {
 
       <iframe key={musicTracks[activeTrack][2]} ref={cassettePlayerRef} className="cassette-audio" title={`Cassette player — ${musicTracks[activeTrack][1]}`} allow="autoplay" src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(musicTracks[activeTrack][2])}&color=%23c7ff3a&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=false`} />
 
-      {selectedPost && <div className="blog-overlay" role="dialog" aria-modal="true" onMouseDown={(event) => { if (event.target === event.currentTarget) closePost(); }}><article className="blog-reader"><button className="blog-close" onClick={closePost} aria-label={language === "pt" ? "Fechar artigo" : "Close article"}>×</button><p className="eyebrow acid">LINER NOTE / {selectedPost.tag} / {selectedPost.publishedAt}</p><h2>{selectedPost.title[language]}</h2><div className="blog-share-row"><p className="blog-lead">{selectedPost.excerpt[language]}</p><button onClick={() => copyPostLink(selectedPost)}>{copiedPostId === selectedPost.id ? (language === "pt" ? "LINK COPIADO ✓" : "LINK COPIED ✓") : (language === "pt" ? "COPIAR LINK ↗" : "COPY LINK ↗")}</button></div><div className="blog-body">{renderBlogContent(selectedPost.content[language])}</div><footer><span>LUCAS // PERSONAL OS</span><button onClick={closePost}>{language === "pt" ? "FECHAR NOTA ↑" : "CLOSE NOTE ↑"}</button></footer></article></div>}
+      {selectedPost && <div className="blog-overlay" role="dialog" aria-modal="true" onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedPost(null); }}><article className="blog-reader"><button className="blog-close" onClick={() => setSelectedPost(null)}>×</button><p className="eyebrow acid">LINER NOTE / {selectedPost.tag} / {selectedPost.publishedAt}</p><h2>{selectedPost.title[language]}</h2><p className="blog-lead">{selectedPost.excerpt[language]}</p><div className="blog-body">{renderBlogContent(selectedPost.content[language])}</div><footer><span>LUCAS // PERSONAL OS</span><button onClick={() => setSelectedPost(null)}>FECHAR NOTA ↑</button></footer></article></div>}
 
       {terminalOpen && (
         <div
@@ -1045,14 +610,7 @@ export default function Home() {
               <button onClick={() => setTerminalOpen(false)} aria-label="Fechar terminal">×</button>
             </div>
             <div className="terminal-output" onClick={() => inputRef.current?.focus()}>
-              {terminalLines.map((line, index) => (
-                <p
-                  className={line.includes("A.L.I.C.E.") || line.includes("🐧") || line.startsWith("Manche") ? "alice-terminal-line" : undefined}
-                  key={`${line}-${index}`}
-                >
-                  {line}
-                </p>
-              ))}
+              {terminalLines.map((line, index) => <p key={`${line}-${index}`}>{line}</p>)}
               <form onSubmit={runCommand}>
                 <label htmlFor="terminal-command">lucas@tape:~$</label>
                 <input
@@ -1075,3 +633,4 @@ export default function Home() {
     </main>
   );
 }
+
