@@ -1,0 +1,3 @@
+Rebuild trigger for the scheduled article "LLM local vale a pena ou é só fetiche de homelab?".
+
+Reason: scheduled post availability was pre-rendered before its publication date.
