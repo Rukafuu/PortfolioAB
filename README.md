@@ -108,7 +108,7 @@ Ela conversa com visitantes, preserva uma sessão limitada, expõe o estado real
 | `02` | [CAFUNÉ](https://github.com/Rukafuu/CAFUNE) | SNN · Transformer · RLAIF |
 | `03` | [Xodó Studio](https://github.com/Rukafuu/xodo-ide) | IDE para criar e depurar agentes visualmente |
 | `04` | [PortarIA](https://github.com/Rukafuu/PortarIA) | Reconhecimento facial · liveness ativo |
-| `05` | [Above All Graphs](https://github.com/thewaifucorp) | Contexto estrutural para agentes de código |
+| `05` | [AAG Agent Protocol](https://github.com/Rukafuu/AAG-Protocol) | Contexto estrutural verificável para agentes de código |
 | `06` | [wAIfu Corp](https://waifucorp.org/) | Coletivo open source · IA experimental |
 
 ## SIDE B — PRODUCER
