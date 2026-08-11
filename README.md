@@ -71,7 +71,8 @@ O projeto abandona a estrutura tradicional de portfólio e transforma a navegaç
 - Player com play, pause, anterior, próxima faixa e sequência automática.
 - Terminal navegável com comandos, rotas escondidas e interferências ocasionais.
 - Liner notes transformadas em blog técnico com links individuais compartilháveis.
-- Projetos atualizados usando a API pública do GitHub.
+- Projetos em destaque escolhidos por maturidade e recência, além de um catálogo dos trabalhos menores e anteriores.
+- Metadados dos repositórios atualizados usando a API pública do GitHub.
 - Currículo disponível no próprio site, em PDF e DOCX.
 - Layout responsivo pensado para toque, teclado e safe areas do iOS.
 
@@ -102,14 +103,18 @@ Ela conversa com visitantes, preserva uma sessão limitada, expõe o estado real
 
 ## TRACK 04 — SELECTED PROJECTS
 
+A faixa principal combina projetos maduros com os sinais mais recentes. O site também preserva um catálogo separado com protótipos, estudos e capítulos anteriores.
+
 | REC | PROJETO | SINAL |
 |:---:|---|---|
 | `01` | [LiraVtuber](https://github.com/Rukafuu/LiraVtuber) | Voz · memória híbrida · ferramentas · Live2D |
-| `02` | [CAFUNÉ](https://github.com/Rukafuu/CAFUNE) | SNN · Transformer · RLAIF |
-| `03` | [Xodó Studio](https://github.com/Rukafuu/xodo-ide) | IDE para criar e depurar agentes visualmente |
-| `04` | [PortarIA](https://github.com/Rukafuu/PortarIA) | Reconhecimento facial · liveness ativo |
-| `05` | [AAG Agent Protocol](https://github.com/Rukafuu/AAG-Protocol) | Contexto estrutural verificável para agentes de código |
-| `06` | [wAIfu Corp](https://waifucorp.org/) | Coletivo open source · IA experimental |
+| `02` | [CAFUNÉ](https://github.com/Rukafuu/CAFUNE) | Julia · difusão mascarada · SNN · RLAIF |
+| `03` | [Xodó Studio](https://github.com/Rukafuu/xodo-ide) | Tauri · Monaco · IDE para agentes |
+| `04` | [AAG Agent Protocol](https://github.com/Rukafuu/AAG-Protocol) | Protocolo · mapas verificáveis · agent evals |
+| `05` | [TimeWarp](https://github.com/Rukafuu/TimeWarp) | Go · replay causal · MCP · debugging seguro |
+| `06` | [ExpoMCP](https://github.com/Rukafuu/ExpoMCP) | Expo · MCP read-only · diagnóstico seguro |
+| `07` | [Tsuma](https://github.com/Rukafuu/tsuma) | Electron · VRM · Three.js · MCP |
+| `08` | [GhostClock](https://github.com/Rukafuu/GhostCLock) | C++ · Win32 · performance reversível |
 
 ## SIDE B — PRODUCER
 
