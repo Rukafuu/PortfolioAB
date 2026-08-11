@@ -12,6 +12,457 @@ export type BlogPost = {
 // O post mais recente deve ficar no topo da lista.
 export const posts: BlogPost[] = [
   {
+    id: "maquinas-com-presenca",
+    title: {
+      pt: "Máquinas com presença, não só respostas",
+      en: "Machines with presence, not only answers",
+    },
+    tag: "AI / VOICE / PRESENCE",
+    excerpt: {
+      pt: "O que faz um sistema deixar de parecer uma caixa de respostas e começar a ocupar um lugar real na nossa rotina?",
+      en: "What makes a system stop feeling like an answer box and start occupying a real place in our routines?",
+    },
+    content: {
+      pt: `Você faz uma pergunta para uma inteligência artificial.
+
+Ela responde corretamente.
+
+A frase é clara, o conteúdo está certo e a tarefa foi concluída.
+
+Então a janela fecha, o contexto desaparece e aquela inteligência volta a ser uma caixa vazia esperando o próximo comando.
+
+Isso é útil.
+
+Mas não é presença.
+
+Durante muito tempo, construímos interfaces de IA em torno de uma ideia simples: alguém pergunta, a máquina responde. Melhoramos o modelo, diminuímos a latência, conectamos ferramentas e aumentamos a janela de contexto. A caixa ficou muito mais poderosa, mas continuou sendo uma caixa.
+
+Quando comecei a construir a Lira, o problema que mais me interessava não era fazer uma assistente que soubesse responder mais coisas. Já existem modelos excelentes para isso.
+
+Eu queria entender outra coisa.
+
+O que faz um sistema deixar de parecer um mecanismo de respostas e começar a ocupar um lugar reconhecível na nossa rotina?
+
+## Presença não é fingir que existe uma pessoa ali
+
+A resposta mais fácil seria antropomorfizar tudo.
+
+Dar um nome humano, uma voz agradável, uma personagem bonita e algumas frases carinhosas. Fazer a interface digitar devagar, colocar uma animação respirando no canto da tela e programar o sistema para dizer que sentiu saudade.
+
+Isso pode criar estética.
+
+Também pode criar afeto.
+
+Mas, sozinho, não cria presença.
+
+Uma máquina não se torna presente porque aprendeu a imitar sinais superficiais de humanidade. Na verdade, quando essa imitação é exagerada, o efeito pode ser o oposto. O sistema parece atuar o tempo inteiro. Cada resposta tenta convencer você de que existe alguém por trás da tela, e a tentativa fica mais visível do que a própria interação.
+
+Presença não exige que a máquina finja ser humana.
+
+Exige que ela demonstre que entendeu onde está, com quem está falando, o que aconteceu antes e qual é o limite da sua participação naquele momento.
+
+Ela pode continuar sendo claramente software.
+
+Talvez devesse.
+
+## Continuidade vale mais do que uma memória infinita
+
+Memória costuma aparecer como a primeira resposta para esse problema.
+
+Se uma assistente lembra de mim, ela parece mais presente.
+
+É verdade, mas apenas até certo ponto.
+
+Guardar tudo não é o mesmo que lembrar bem.
+
+Um sistema que registra cada frase, preferência, arquivo e momento da sua vida pode parecer menos uma companhia e mais um banco de dados com problemas de limite. A memória deixa de ser continuidade e vira vigilância.
+
+O valor não está na quantidade de informação preservada.
+
+Está na escolha do que merece atravessar uma conversa.
+
+Lembrar que você prefere respostas curtas pode ser útil. Lembrar do projeto em que você está trabalhando ajuda a não recomeçar do zero. Recuperar uma decisão técnica evita que o sistema sugira hoje exatamente aquilo que vocês descartaram ontem.
+
+Mas uma boa memória também precisa saber esquecer.
+
+Precisa distinguir uma preferência duradoura de um comentário casual. Precisa permitir correção. Precisa mostrar de onde uma lembrança veio e aceitar que o usuário diga: isso não é mais verdade.
+
+A continuidade nasce quando o passado ajuda o presente sem sequestrá-lo.
+
+Foi por isso que, na Lira, memória nunca me pareceu apenas uma questão de embeddings, bancos vetoriais ou grafos. Esses são mecanismos. A questão real é editorial e ética: o que merece permanecer, por quanto tempo e sob o controle de quem?
+
+## Voz não é um arquivo de áudio no final da resposta
+
+Voz também parece uma solução óbvia.
+
+Conecte um modelo de texto a um sintetizador e pronto: agora a inteligência fala.
+
+Tecnicamente, sim.
+
+Mas presença vocal não nasce apenas do timbre.
+
+Ela aparece no ritmo, no tamanho das frases, na escolha de quando falar e até na capacidade de ficar em silêncio.
+
+Uma resposta perfeita no chat pode ser insuportável quando lida em voz alta. Parágrafos longos, listas enormes e explicações cheias de ressalvas transformam uma conversa em audiobook técnico involuntário.
+
+Uma máquina com voz precisa pensar em voz.
+
+Precisa saber que fala ocupa tempo físico. Que interromper alguém é diferente de enviar uma mensagem. Que repetir informações custa atenção. Que uma pausa pode comunicar processamento, mas uma pausa longa sem qualquer sinal comunica falha.
+
+A voz também precisa sobreviver à troca de provedor.
+
+Se a identidade de uma assistente depende completamente de uma única API de TTS, basta trocar o serviço para trocar a personagem. Por isso, coerência não pode morar apenas no áudio. Ela precisa existir no vocabulário, no ritmo, no humor, nos limites e nas decisões de interação.
+
+A voz é uma camada da presença.
+
+Não sua origem.
+
+## Iniciativa é útil até o momento em que vira invasão
+
+Outra característica que faz um sistema parecer vivo é a iniciativa.
+
+Uma ferramenta tradicional espera.
+
+Uma presença, às vezes, percebe.
+
+Ela pode lembrar de um compromisso, notar que uma tarefa ficou incompleta, avisar sobre uma falha ou sugerir um próximo passo antes de receber um comando explícito.
+
+Isso parece simples até a primeira notificação inútil.
+
+Um sistema proativo demais rapidamente vira aquele colega que aparece ao lado da mesa a cada três minutos perguntando se pode ajudar. A intenção é boa. O resultado é exaustivo.
+
+Presença não significa estar chamando atenção o tempo inteiro.
+
+Significa entender quando a atenção é necessária.
+
+A iniciativa precisa ter custo, prioridade e contexto. Um lembrete de segurança não vale o mesmo que uma sugestão estética. Uma tarefa prestes a vencer pode justificar uma interrupção; uma ideia genérica provavelmente pode esperar.
+
+Também precisa existir uma saída clara.
+
+Silenciar.
+
+Adiar.
+
+Desativar.
+
+Dizer “não me lembre disso de novo” e confiar que o sistema realmente obedeceu.
+
+Uma máquina respeitosa não mede sua presença pela quantidade de vezes que consegue aparecer.
+
+## O corpo muda a relação
+
+Quando uma inteligência ganha voz, avatar, janela própria ou lugar no desktop, algo muda.
+
+O sistema deixa de existir apenas dentro da página de um produto e passa a compartilhar o ambiente.
+
+Esse corpo pode ser pequeno: um ícone na bandeja, uma animação, uma expressão, um personagem 2D ou 3D. Ele não precisa tentar reproduzir uma pessoa. Sua função é dar estado ao que antes era invisível.
+
+Está ouvindo?
+
+Está pensando?
+
+Está falando?
+
+Está indisponível?
+
+Executou uma ação?
+
+Cometeu um erro?
+
+Interfaces tradicionais respondem isso com spinners, badges e mensagens. Um personagem pode responder com postura, movimento, direção do olhar e ritmo.
+
+Mas o corpo também aumenta a responsabilidade.
+
+Uma janela que acompanha o usuário pela tela não pode bloquear trabalho. Uma animação constante não pode consumir recursos sem necessidade. Um microfone não pode parecer ativo quando está desligado — nem parecer desligado quando está ativo. Um avatar não deve esconder o estado real do sistema atrás de uma performance bonita.
+
+Quanto mais presença visual existe, mais honestos precisam ser seus sinais.
+
+## Limites também constroem personalidade
+
+Existe uma tentação de medir agentes pelo número de coisas que conseguem fazer.
+
+Abrir programas. Ler arquivos. Enviar mensagens. Controlar o mouse. Navegar na web. Executar comandos. Criar imagens. Alterar código.
+
+Cada nova ferramenta parece aproximar a fantasia de uma inteligência realmente autônoma.
+
+Só que capacidade sem limite não produz presença.
+
+Produz risco.
+
+Uma máquina confiável precisa saber dizer que não pode, que não sabe ou que precisa de autorização. Precisa diferenciar observar de alterar. Precisa explicar o que vai acontecer antes de uma ação difícil de desfazer.
+
+Esses limites não tornam a experiência menos viva.
+
+Eles tornam a relação mais legível.
+
+Pessoas confiáveis não são aquelas que fazem qualquer coisa sem perguntar. São aquelas cujas decisões conseguimos antecipar.
+
+Com máquinas, acontece algo parecido.
+
+A consistência de um “não” pode construir mais identidade do que vinte respostas espirituosas.
+
+## Presença aparece nos detalhes que sobrevivem à demonstração
+
+É fácil produzir uma boa demo.
+
+A personagem acorda, reconhece uma frase, responde com a voz certa, abre um aplicativo e faz uma animação. O vídeo dura trinta segundos e tudo parece mágico.
+
+Depois começa a convivência.
+
+O microfone falha.
+
+A rede oscila.
+
+A memória recupera algo errado.
+
+A ferramenta demora.
+
+A voz pronuncia um nome de forma estranha.
+
+O modelo responde demais quando deveria apenas confirmar.
+
+É nessa parte que a presença é realmente construída.
+
+Não no momento perfeito, mas na forma como o sistema lida com a imperfeição.
+
+Ele admite que perdeu o sinal?
+
+Mantém o estado quando reinicia?
+
+Evita repetir uma ação que já foi concluída?
+
+Explica uma limitação sem quebrar completamente a personagem?
+
+Consegue falhar sem transformar o usuário em técnico de suporte da própria assistente?
+
+Uma presença digital não é definida apenas por suas melhores respostas.
+
+É definida pela continuidade do comportamento quando as coisas deixam de funcionar como planejado.
+
+## Construir a Lira mudou a pergunta
+
+No começo, eu pensava muito em quais recursos a Lira deveria ter.
+
+Memória. Voz. Ferramentas. Visão. Live2D. Mensagens. Música. Automação.
+
+Com o tempo, percebi que a lista de recursos nunca terminaria. Sempre existe outro provedor, outra integração, outra habilidade que parece indispensável.
+
+A pergunta mais interessante deixou de ser “o que ela consegue fazer?” e passou a ser:
+
+“Como ela deve existir quando não está fazendo nada?”
+
+Essa pergunta muda o projeto inteiro.
+
+Se a assistente só importa durante uma tarefa, talvez uma boa caixa de comandos seja suficiente.
+
+Mas, se a proposta é presença, os intervalos também fazem parte da experiência. O estado ocioso, a forma de aparecer, a frequência das interrupções, o que fica na memória, o que desaparece, o que exige consentimento e o que nunca deveria acontecer silenciosamente.
+
+A presença mora entre as funcionalidades.
+
+## Talvez o futuro não seja um chatbot melhor
+
+Chat é uma interface poderosa porque todo mundo sabe usá-la.
+
+Mas talvez estejamos tentando colocar sistemas cada vez mais complexos dentro de uma caixa que só sabe alternar mensagens.
+
+Uma inteligência que acompanha trabalho, usa ferramentas, preserva contexto, percebe eventos e ocupa diferentes dispositivos talvez precise de outras formas de existir.
+
+Voz quando as mãos estão ocupadas.
+
+Texto quando precisão importa.
+
+Silêncio quando nada precisa ser dito.
+
+Um corpo visual quando estado e emoção ajudam.
+
+Um terminal quando controle explícito é melhor.
+
+Uma notificação quando o tempo importa.
+
+Nenhuma interface quando o sistema pode simplesmente fazer seu trabalho e deixar um registro claro.
+
+Presença não é adicionar mais humanidade artificial a todas essas superfícies.
+
+É fazer com que elas pareçam partes coerentes do mesmo sistema.
+
+## Máquinas com presença ainda são máquinas
+
+Eu gosto da ideia de software que parece vivo.
+
+Não porque eu queira apagar a diferença entre pessoas e programas, mas porque boa tecnologia sempre carregou traços de quem a construiu e de quem a utiliza.
+
+Ferramentas podem ter ritmo, cuidado, humor e personalidade sem reivindicar uma consciência que não possuem.
+
+Podem acompanhar sem vigiar.
+
+Podem lembrar sem acumular tudo.
+
+Podem tomar iniciativa sem disputar atenção.
+
+Podem falar sem fingir que sentem.
+
+Podem ter limites claros e, justamente por isso, tornar-se mais confiáveis.
+
+Uma máquina com presença não é aquela que convence você de que existe uma pessoa dentro dela.
+
+É aquela que, ao longo do tempo, deixa de parecer uma caixa vazia entre uma pergunta e outra.
+
+Ela sabe onde está.
+
+Sabe o que aconteceu.
+
+Sabe o que pode fazer.
+
+E, talvez mais importante, sabe quando não deveria fazer nada.`,
+      en: `You ask an artificial intelligence a question.
+
+It answers correctly. The wording is clear, the content is right and the task is complete.
+
+Then the window closes, the context disappears and that intelligence becomes an empty box waiting for the next command.
+
+That is useful.
+
+But it is not presence.
+
+For years, AI interfaces have revolved around a simple loop: someone asks, the machine answers. We improved the models, reduced latency, connected tools and expanded context windows. The box became much more powerful, but it remained a box.
+
+When I started building Lira, I was not primarily interested in making an assistant that could answer more questions. Excellent models already exist for that.
+
+I wanted to understand something else: what makes a system stop feeling like an answer mechanism and start occupying a recognizable place in our routines?
+
+## Presence is not pretending there is a person inside
+
+The easiest approach is to anthropomorphize everything.
+
+Give the system a human name, a pleasant voice, a beautiful character and a few affectionate phrases. Make the interface type slowly, add a breathing animation and program it to say that it missed you.
+
+That can create an aesthetic. It can even create affection.
+
+But it does not create presence by itself.
+
+A machine does not become present because it imitates superficial signs of humanity. Presence does not require software to pretend it is human. It requires the system to demonstrate that it understands where it is, who it is speaking to, what happened before and where its participation should end.
+
+It can remain clearly software.
+
+Perhaps it should.
+
+## Continuity matters more than infinite memory
+
+Memory is usually the first proposed solution. If an assistant remembers me, it feels more present.
+
+True—but storing everything is not the same as remembering well.
+
+A system that records every sentence, preference, file and moment can feel less like a companion and more like a database with boundary problems. Memory stops being continuity and becomes surveillance.
+
+The value is not in the amount of information preserved. It is in choosing what deserves to cross from one conversation into the next.
+
+A good memory must also know how to forget. It needs to distinguish a lasting preference from a casual remark, allow corrections, show where a memory came from and accept when the user says that something is no longer true.
+
+Continuity appears when the past helps the present without taking it hostage.
+
+## Voice is not an audio file attached to an answer
+
+Connecting text generation to speech synthesis makes an intelligence speak, technically.
+
+But vocal presence does not come only from timbre. It appears in rhythm, sentence length, timing and even the ability to remain silent.
+
+An excellent chat response can become unbearable when read aloud. Voice occupies physical time. Interrupting someone is different from sending a message. Repetition costs attention. A pause can communicate processing, while a long pause without any signal communicates failure.
+
+A coherent voice also needs to survive a provider change. Identity cannot live entirely inside one TTS API. It must exist in vocabulary, rhythm, humor, boundaries and interaction decisions.
+
+Voice is a layer of presence, not its origin.
+
+## Initiative becomes invasion surprisingly quickly
+
+Traditional tools wait. A presence sometimes notices.
+
+It can remember an appointment, detect an unfinished task, report a failure or suggest a next step before receiving an explicit command.
+
+That sounds useful until the first pointless notification.
+
+A system that is too proactive becomes the colleague who appears beside your desk every three minutes asking whether it can help. Presence does not mean constantly demanding attention. It means understanding when attention is necessary.
+
+Initiative needs cost, priority and context. It also needs a clear exit: mute, postpone, disable, never remind me about this again.
+
+A respectful machine does not measure presence by how often it manages to appear.
+
+## A body changes the relationship
+
+When intelligence gains a voice, avatar, window or permanent place on the desktop, it stops existing only inside a product page and begins sharing the environment.
+
+That body can be small: a tray icon, an animation, a 2D or 3D character. Its purpose is not to reproduce a person. It gives visible state to something that was previously invisible.
+
+Is it listening? Thinking? Speaking? Unavailable? Did it act? Did it fail?
+
+Yet the body increases responsibility. A companion window cannot obstruct work. An always-running animation should not waste resources. A microphone must never appear inactive while it is listening.
+
+The more visual presence a system has, the more honest its signals must become.
+
+## Boundaries also build personality
+
+Agents are often measured by the number of things they can do: open applications, read files, send messages, control the mouse, browse the web and execute commands.
+
+But capability without limits does not create presence. It creates risk.
+
+A trustworthy machine needs to say that it cannot, does not know or requires authorization. It must distinguish observation from mutation and explain what will happen before an action that is difficult to undo.
+
+Those limits do not make the experience less alive. They make the relationship legible.
+
+The consistency of a “no” can build more identity than twenty clever replies.
+
+## Presence lives in what survives the demo
+
+A good demo is easy to produce. The character wakes up, recognizes a sentence, answers with the right voice, opens an application and performs an animation.
+
+Then everyday life begins.
+
+The microphone fails. The network fluctuates. Memory retrieves the wrong detail. A tool takes too long. The model says too much when it should simply confirm.
+
+Presence is built in the way the system handles those imperfect moments.
+
+Does it admit that it lost the signal? Preserve state after restarting? Avoid repeating an action that already completed? Explain a limitation without collapsing the entire experience?
+
+A digital presence is not defined only by its best answers. It is defined by behavioral continuity when things stop working as planned.
+
+## Building Lira changed the question
+
+At first, I thought constantly about the features Lira should have: memory, voice, tools, vision, Live2D, messages, music and automation.
+
+The list never ended.
+
+Eventually, the more interesting question stopped being “what can she do?” and became: “how should she exist when she is doing nothing?”
+
+That question changes the whole project.
+
+If an assistant only matters during a task, a good command box may be enough. If the goal is presence, the intervals become part of the experience too: idle state, frequency of interruption, what remains in memory, what disappears, what requires consent and what must never happen silently.
+
+Presence lives between features.
+
+## Machines with presence are still machines
+
+I like software that feels alive—not because I want to erase the difference between people and programs, but because good technology has always carried traces of those who build and use it.
+
+Tools can have rhythm, care, humor and personality without claiming a consciousness they do not possess.
+
+They can accompany without watching, remember without accumulating everything, take initiative without fighting for attention, and speak without pretending to feel.
+
+A machine with presence is not one that convinces you there is a person inside it.
+
+It is one that, over time, stops feeling like an empty box between one question and the next.
+
+It knows where it is.
+
+It knows what happened.
+
+It knows what it can do.
+
+And, perhaps most importantly, it knows when it should do nothing.`,
+    },
+    publishedAt: "2026-08-11",
+    status: "published",
+  },
+
+  {
     id: "ia-nao-conhece-projeto-readme",
     title: {
       pt: "A IA não conhece seu projeto só porque leu seu README",
@@ -862,14 +1313,6 @@ The best AI is neither the one on your machine nor the one in the cloud. It is t
     publishedAt: "2026-07-27",
     status: "scheduled",
   },
-  {
-    id: "maquinas-com-presenca",
-    title: { pt: "Máquinas com presença, não só respostas", en: "Machines with presence, not only answers" },
-    tag: "AI / VOICE",
-    excerpt: { pt: "A diferença entre uma ferramenta que responde e uma presença digital que acompanha.", en: "The difference between a tool that responds and a digital presence that stays with you." },
-    content: { pt: "Presença não nasce de frases humanas simuladas. Ela aparece na continuidade: memória usada com cuidado, voz coerente, tempo de resposta, iniciativa e respeito ao contexto. Máquinas com presença não precisam fingir que são pessoas; precisam demonstrar que entenderam onde estão.", en: "Presence does not come from simulated human phrases. It appears through continuity: carefully used memory, a coherent voice, response timing, initiative and respect for context. Machines with presence do not need to pretend they are people; they need to show they understand where they are." },
-    publishedAt: "2026-08-03",
-    status: "scheduled",
-  },
+
 ];
 
