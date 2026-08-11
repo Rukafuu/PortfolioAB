@@ -78,55 +78,45 @@ declare global {
   interface Window { SC?: { Widget: ((element: HTMLIFrameElement) => SoundCloudWidget) & { Events: { READY: string; PLAY: string; PAUSE: string; FINISH: string } } } }
 }
 
-const projects = [
-  {
-    id: "01",
-    name: "LiraVtuber",
-    repo: "LiraVtuber",
-    url: "https://github.com/Rukafuu/LiraVtuber",
-    type: "PYTHON / LIVE2D / VOICE / AGENTS",
-    status: "PLAYING",
-    description: {
-      pt: "Assistente VTuber desktop-first com voz, memória híbrida, ferramentas autônomas, multimodalidade e integração Live2D.",
-      en: "A desktop-first VTuber assistant with voice, hybrid memory, autonomous tools, multimodality and Live2D integration.",
-    },
-  },
-  {
-    id: "02",
-    name: "CAFUNÉ",
-    repo: "CAFUNE",
-    url: "https://github.com/Rukafuu/CAFUNE",
-    type: "SNN / TRANSFORMER / RLAIF",
-    status: "SYNC",
-    description: {
-      pt: "Modelo híbrido que combina uma SNN 11D e um Transformer bidirecional de 22,5M parâmetros.",
-      en: "A hybrid model combining an 11D SNN with a 22.5M-parameter bidirectional Transformer.",
-    },
-  },
-  {
-    id: "03",
-    name: "Xodó Studio",
-    repo: "xodo-ide",
-    url: "https://github.com/Rukafuu/xodo-ide",
-    type: "TAURI / MONACO / AI AGENTS",
-    status: "REWIND",
-    description: {
-      pt: "Uma IDE desktop para criar, conversar e depurar agentes de IA visualmente.",
-      en: "A desktop IDE for building, chatting with and visually debugging AI agents.",
-    },
-  },
-  {
-    id: "04", name: "Yume no Sekai", repo: "Yume-no-Sekai", url: "https://github.com/Rukafuu/Yume-no-Sekai", type: "VUE / THREE.JS / FASTAPI", status: "DREAM",
-    description: { pt: "Visual novel experimental com narrativa gerada por IA e estética nakige.", en: "An experimental visual novel with AI-generated narrative and a nakige aesthetic." },
-  },
-  {
-    id: "05", name: "Raegis API", repo: "raegis-api", url: "https://github.com/Rukafuu/raegis-api", type: "PYTORCH / RAG / AUDIT", status: "SCAN",
-    description: { pt: "Estação científica para auditar modelos, fidelidade de RAG, entropia e anomalias.", en: "A scientific station for auditing models, RAG fidelity, entropy and anomalies." },
-  },
-  {
-    id: "06", name: "PortarIA", repo: "PortarIA", url: "https://github.com/Rukafuu/PortarIA", type: "FASTAPI / INSIGHTFACE / PGVECTOR", status: "SECURE",
-    description: { pt: "Controle de acesso por reconhecimento facial com liveness ativo em múltiplos estágios e busca vetorial de embeddings.", en: "Facial-recognition access control with multi-stage active liveness and vector embedding search." },
-    },
+const featuredProjects = [
+  { id: "01", name: "LiraVtuber", repo: "LiraVtuber", url: "https://github.com/Rukafuu/LiraVtuber", type: "PYTHON / LIVE2D / VOICE / AGENTS", status: "FLAGSHIP",
+    description: { pt: "Assistente VTuber desktop-first com voz, memória híbrida, ferramentas autônomas, multimodalidade e integração Live2D.", en: "A desktop-first VTuber assistant with voice, hybrid memory, autonomous tools, multimodality and Live2D integration." } },
+  { id: "02", name: "CAFUNÉ", repo: "CAFUNE", url: "https://github.com/Rukafuu/CAFUNE", type: "JULIA / SNN / DIFFUSION / RLAIF", status: "RESEARCH",
+    description: { pt: "Motor de linguagem neuromórfico que combina difusão mascarada, Transformer bidirecional, dinâmica SNN e um reservatório hipercúbico 11D.", en: "A neuromorphic language engine combining masked diffusion, a bidirectional Transformer, SNN dynamics and an 11D hypercube reservoir." } },
+  { id: "03", name: "Xodó Studio", repo: "xodo-ide", url: "https://github.com/Rukafuu/xodo-ide", type: "TAURI / MONACO / AI AGENTS", status: "PRODUCT",
+    description: { pt: "IDE desktop em Tauri para criar, conversar e depurar agentes de IA com Monaco Editor e feedback visual em tempo real.", en: "A Tauri desktop IDE for building, chatting with and debugging AI agents through Monaco Editor and real-time visual feedback." } },
+  { id: "04", name: "AAG Agent Protocol", repo: "AAG-Protocol", url: "https://github.com/Rukafuu/AAG-Protocol", type: "PROTOCOL / JSON SCHEMA / AGENT EVALS", status: "DRAFT 0.2",
+    description: { pt: "Especificação aberta para agentes criarem mapas estruturais verificáveis de repositórios, com conformance e benchmark experimental.", en: "An open specification for agents to build verifiable repository maps, with conformance rules and an experimental benchmark." } },
+  { id: "05", name: "TimeWarp", repo: "TimeWarp", url: "https://github.com/Rukafuu/TimeWarp", type: "GO / SQLITE / MCP / DISTRIBUTED SYSTEMS", status: "NEW",
+    description: { pt: "Gravação causal local-first e replay HTTP seguro para depurar sistemas distribuídos, com consentimento, auditoria e checkpoints reversíveis.", en: "Local-first causal recording and safe HTTP replay for distributed-system debugging, with consent, auditing and reversible checkpoints." } },
+  { id: "06", name: "ExpoMCP", repo: "ExpoMCP", url: "https://github.com/Rukafuu/ExpoMCP", type: "TYPESCRIPT / MCP / EXPO / SECURITY", status: "NEW",
+    description: { pt: "Servidor MCP local e somente leitura para agentes inspecionarem e diagnosticarem projetos React Native/Expo sem expor segredos.", en: "A local read-only MCP server that lets agents inspect and diagnose React Native/Expo projects without exposing secrets." } },
+  { id: "07", name: "Tsuma", repo: "tsuma", url: "https://github.com/Rukafuu/tsuma", type: "ELECTRON / THREE.JS / VRM / MCP", status: "ALPHA",
+    description: { pt: "Companheira desktop 3D controlável por agentes via MCP, com contratos de animação, janela transparente e isolamento de renderer.", en: "A 3D desktop companion controlled by agents through MCP, with animation contracts, a transparent window and renderer isolation." } },
+  { id: "08", name: "GhostClock", repo: "GhostCLock", url: "https://github.com/Rukafuu/GhostCLock", type: "C++ / WIN32 / PERFORMANCE / SAFETY", status: "NEW MVP",
+    description: { pt: "Orquestrador de desempenho para Windows que aplica mudanças pequenas e reversíveis de escalonamento, sem overclock ou alterações de voltagem.", en: "A Windows performance orchestrator that applies small, reversible scheduling changes without overclocking or voltage changes." } },
+];
+
+const archiveProjects = [
+  { name: "Ketchup", repo: "Ketchup", type: "GO / VSCODE", description: { pt: "Ferramentas conservadoras para retomar contexto e sincronizar workspaces.", en: "Conservative tooling for context resumption and workspace synchronization." } },
+  { name: "Sotto", repo: "sotto", type: "PYTHON / DSP", description: { pt: "Conversão experimental de fala normal em sussurro usando acústica empírica.", en: "Experimental speech-to-whisper conversion through empirical acoustics." } },
+  { name: "PortarIA", repo: "PortarIA", type: "FASTAPI / COMPUTER VISION", description: { pt: "Controle de acesso facial com liveness ativo e busca vetorial.", en: "Facial access control with active liveness and vector search." } },
+  { name: "Yume no Sekai", repo: "Yume-no-Sekai", type: "VUE / THREE.JS / FASTAPI", description: { pt: "Visual novel experimental com narrativa gerada por IA.", en: "An experimental visual novel with AI-generated narrative." } },
+  { name: "Raegis", repo: "Raegis", type: "AI AUDIT / WEB", description: { pt: "Interface de experimentação e auditoria de sistemas de IA.", en: "An interface for experimenting with and auditing AI systems." } },
+  { name: "Raegis API", repo: "raegis-api", type: "PYTORCH / RAG", description: { pt: "Backend científico para fidelidade de RAG, entropia e anomalias.", en: "Scientific backend for RAG fidelity, entropy and anomaly analysis." } },
+  { name: "Scrobblefy", repo: "Scrobblefy", type: "MUSIC / DATA", description: { pt: "Experimento de dados e histórico de escuta musical.", en: "A music listening-history and data experiment." } },
+  { name: "LiraOS", repo: "LiraOS", type: "PYTHON / DESKTOP AI", description: { pt: "Uma geração anterior do ecossistema de assistentes Lira.", en: "An earlier generation of the Lira assistant ecosystem." } },
+  { name: "Lira Developer Dashboard", repo: "lira-developer-dashboard", type: "DASHBOARD / DX", description: { pt: "Painel de desenvolvimento e observabilidade para o ecossistema Lira.", en: "Development and observability dashboard for the Lira ecosystem." } },
+  { name: "SmartCompare", repo: "SmartCompare", type: "EXPERIMENT", description: { pt: "Utilitário experimental de comparação inteligente.", en: "An experimental intelligent-comparison utility." } },
+  { name: "FukkaVT", repo: "FukkaVT", type: "VTUBER / VOICE", description: { pt: "Protótipo anterior de personagem virtual e interação por voz.", en: "An earlier virtual-character and voice-interaction prototype." } },
+  { name: "CAFUNRIPPER", repo: "CAFUNRIPPER", type: "MODEL TOOLS", description: { pt: "Ferramentas auxiliares de pesquisa ligadas ao ecossistema CAFUNÉ.", en: "Supporting research tools for the CAFUNÉ ecosystem." } },
+  { name: "Classificação de Sentimento", repo: "Classifica-o-de-sentimento-", type: "NLP / PYTHON", description: { pt: "Experimento compacto de classificação de sentimento.", en: "A compact sentiment-classification experiment." } },
+  { name: "BitNet for CAFUNÉ", repo: "BitNet-4-CAFUNE", type: "BITNET / RESEARCH", description: { pt: "Investigação de pesos ternários aplicada ao CAFUNÉ.", en: "An exploration of ternary weights applied to CAFUNÉ." } },
+  { name: "Xodó Language", repo: "Xodo", type: "LANGUAGE / AGENTS", description: { pt: "Linguagem experimental voltada à definição de agentes.", en: "An experimental language for defining agents." } },
+  { name: "Full Stack API", repo: "full-stack-api", type: "API / DOCKER", description: { pt: "Backend de estudo full-stack com ambiente Docker.", en: "A full-stack study backend with a Docker environment." } },
+  { name: "Full Stack Frontend", repo: "full-stack-frontend", type: "FRONTEND", description: { pt: "Interface complementar ao projeto de estudo full-stack.", en: "The companion interface for the full-stack study project." } },
+  { name: "RVC Python", repo: "rvc-python", type: "PYTHON / VOICE", description: { pt: "Experimentos de conversão de voz com RVC.", en: "Voice-conversion experiments using RVC." } },
+  { name: "See Through 2.0", repo: "see-through2.0", type: "AI / RESEARCH", description: { pt: "Fork e laboratório de pesquisa em arquiteturas de modelos.", en: "A fork and research lab for model architectures." } },
 ];
 
 const musicTracks = [
@@ -158,9 +148,9 @@ const copy = {
     sideB: "Lado B",
     flip: "Virar fita",
     tracklist: "Faixas selecionadas",
-    projectsTitle: "Projetos para ouvir com atenção.",
+    projectsTitle: "Projetos em destaque e sinais recentes.",
     projectsIntro:
-      "Eu trabalho onde backend, inteligência artificial e narrativa digital se encontram. Cada projeto abaixo é uma tentativa diferente de dar comportamento, memória ou personalidade ao software.",
+      "Uma curadoria dos trabalhos mais completos e dos sinais mais recentes: agentes, protocolos, ferramentas de desenvolvimento, pesquisa de modelos e software de sistema.",
     openReel: "Abrir faixa",
     labEyebrow: "LINER NOTES / LAB",
     labTitle: "Código também produz cultura.",
@@ -194,9 +184,9 @@ const copy = {
     sideB: "Side B",
     flip: "Flip tape",
     tracklist: "Selected tracks",
-    projectsTitle: "Projects worth a close listen.",
+    projectsTitle: "Featured projects and recent signals.",
     projectsIntro:
-      "I work where backend, artificial intelligence and digital narrative meet. Each project below is a different attempt to give software behavior, memory or personality.",
+      "A curated mix of the strongest work and the newest signals: agents, protocols, developer tools, model research and systems software.",
     openReel: "Open track",
     labEyebrow: "LINER NOTES / LAB",
     labTitle: "Code produces culture too.",
@@ -904,7 +894,7 @@ export default function Home() {
           <p>{t.projectsIntro}</p>
         </div>
         <div className="project-list">
-          {projects.map((project) => {
+          {featuredProjects.map((project) => {
             const live = githubRepos.find((repo) => repo.name.toLowerCase() === project.repo.toLowerCase());
             return (
             <article className="project-row" key={project.id}>
@@ -920,6 +910,29 @@ export default function Home() {
               </div>
             </article>
           )})}
+        </div>
+        <div className="archive-projects" aria-labelledby="archive-projects-title">
+          <div className="archive-heading">
+            <p>{language === "pt" ? "CATÁLOGO / PROJETOS MENORES, ANTERIORES E EXPERIMENTAIS" : "CATALOG / SMALLER, EARLIER AND EXPERIMENTAL PROJECTS"}</p>
+            <h3 id="archive-projects-title">{language === "pt" ? "Todo projeto deixa uma faixa." : "Every project leaves a track."}</h3>
+            <p>{language === "pt" ? "Protótipos, estudos e capítulos anteriores preservados como parte da trajetória — sem disputar atenção com os destaques acima." : "Prototypes, studies and earlier chapters preserved as part of the journey, without competing with the highlights above."}</p>
+          </div>
+          <div className="archive-grid">
+            {archiveProjects.map((project) => {
+              const live = githubRepos.find((repo) => repo.name.toLowerCase() === project.repo.toLowerCase());
+              return (
+                <a className="archive-card" href={live?.html_url ?? `https://github.com/Rukafuu/${project.repo}`} target="_blank" rel="noreferrer" key={project.repo}>
+                  <span>{project.type}</span>
+                  <strong>{project.name}</strong>
+                  <p>{project.description[language]}</p>
+                  <div className="archive-meta">
+                    <span>{live?.language ?? "OPEN SOURCE"}</span>
+                    <span>{live ? "GITHUB LIVE" : "ARCHIVE"} ↗</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
         </div>
         <a className="github-link" href="https://github.com/Rukafuu" target="_blank" rel="noreferrer">VER PERFIL COMPLETO NO GITHUB ↗</a>
         <div className="founder-signal" id="waifucorp">
