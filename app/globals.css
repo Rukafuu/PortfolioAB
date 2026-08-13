@@ -32,7 +32,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -41,7 +42,9 @@ button {
 }
 
 button:focus-visible,
-input:focus-visible {
+input:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
   outline: 2px solid var(--acid);
   outline-offset: 4px;
 }
@@ -127,6 +130,7 @@ input:focus-visible {
 
 .wordmark,
 .deck-header nav button,
+.deck-header nav a,
 .deck-utilities button {
   border: 0;
   background: none;
@@ -149,17 +153,21 @@ input:focus-visible {
 
 .deck-header nav {
   display: flex;
-  gap: clamp(24px, 4.2vw, 68px);
+  gap: clamp(18px, 2.5vw, 46px);
 }
 
-.deck-header nav button {
+.deck-header nav button,
+.deck-header nav a {
   padding: 8px 0;
   border-bottom: 1px solid transparent;
+  color: var(--paper);
   font-size: .74rem;
   letter-spacing: .08em;
+  text-decoration: none;
 }
 
-.deck-header nav button:hover {
+.deck-header nav button:hover,
+.deck-header nav a:hover {
   color: var(--acid);
   border-color: currentColor;
 }
@@ -1157,6 +1165,9 @@ input:focus-visible {
 .now-copy > p { max-width: 600px; font-family: var(--font-geist-sans), sans-serif; font-size: 1.1rem; line-height: 1.65; }
 .now-copy button { width: 100%; margin-top: 34px; padding: 20px 0; border: 0; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); background: none; display: flex; justify-content: space-between; font-size: .72rem; font-weight: 800; text-align: left; text-transform: uppercase; cursor: pointer; }
 .now-copy button span { font-size: 1.3rem; }
+.now-copy .trace-cta { width: 100%; display: flex; justify-content: space-between; margin-top: 14px; padding: 17px 0; border-bottom: 1px solid var(--ink); color: var(--ink); font-size: .68rem; font-weight: 800; letter-spacing: .03em; text-decoration: none; text-transform: uppercase; }
+.now-copy .trace-cta:hover { color: var(--coral); border-bottom-color: var(--coral); }
+.now-copy .trace-cta span { font-size: 1rem; }
 .now-wave { position: absolute; left: 3vw; right: 3vw; bottom: 28px; border-color: rgba(11,11,10,.28); }
 .now-wave i { background: var(--ink); }
 

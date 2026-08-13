@@ -562,7 +562,7 @@ export default function Home() {
     switch (base) {
       case "help":
         output.push("SIDES — dev · artist · side a · side b · flip");
-        output.push("NAV — about · projects · lira · resume · blog · now · github");
+        output.push("NAV — about · projects · lira · resume · blog · now · guestbook · github");
         output.push("TAPE — music · play · pause · next · prev · forward · rewind · auto");
         output.push(language === "pt" ? "HIDDEN — código de jogo antigo · futebol · música de neve · comandos perigosos" : "HIDDEN — old game code · football · snow song · dangerous commands");
         break;
@@ -629,6 +629,12 @@ export default function Home() {
         output.push(language === "pt" ? "Abrindo sinal atual…" : "Opening current signal…");
         destination = "now";
         destinationSide = "dev";
+        break;
+      case "guestbook":
+      case "trace":
+      case "visitors":
+        window.location.assign("/guestbook");
+        output.push("SIDE C / VISITOR LOG — opening…");
         break;
       case "github":
         window.open("https://github.com/Rukafuu", "_blank", "noopener,noreferrer");
@@ -771,6 +777,7 @@ export default function Home() {
             <button onClick={() => scrollTo("resume")}>{language === "pt" ? "Currículo" : "Résumé"}</button>
             <button onClick={() => scrollTo("lab")}>Blog</button>
             <button onClick={() => scrollTo("now")}>{language === "pt" ? "Agora" : "Now"}</button>
+            <a href="/guestbook">Guestbook</a>
           </> : <>
             <button onClick={() => scrollTo("music")}>{language === "pt" ? "Faixas" : "Tracks"}</button>
             <button onClick={() => window.open("https://soundcloud.com/rukafuu", "_blank", "noopener,noreferrer")}>SoundCloud ↗</button>
@@ -1037,6 +1044,7 @@ export default function Home() {
         <div className="now-copy">
           <p>{t.nowBody}</p>
           <button onClick={() => setTerminalOpen(true)}>{t.contact} <span>→</span></button>
+          <a className="trace-cta" href="/guestbook">Been here? Leave a trace. <span>↗</span></a>
         </div>
         <div className="now-wave" aria-hidden="true">
           {Array.from({ length: 64 }).map((_, index) => <i key={index} style={{ "--i": index } as React.CSSProperties} />)}
@@ -1094,7 +1102,7 @@ export default function Home() {
                 />
               </form>
             </div>
-            <div className="terminal-hint">ESC • HELP / DEV / ARTIST / SIDE A|B / LIRA / LIRA STATUS / LIRA WAKE / MUSIC / PLAY / PAUSE / NEXT / AUTO / CLEAR</div>
+            <div className="terminal-hint">ESC • HELP / DEV / ARTIST / SIDE A|B / LIRA / GUESTBOOK / MUSIC / PLAY / PAUSE / NEXT / AUTO / CLEAR</div>
           </div>
         </div>
       )}
