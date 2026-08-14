@@ -151,10 +151,32 @@ Abra `http://localhost:5173` e pressione play.
 ### Verificação
 
 ```bash
+npm run lint
+npm run typecheck
 npm test
 ```
 
 O comando executa a build de produção e valida o comportamento principal, o layout mobile e as transmissões escondidas.
+
+### Guestbook / Leave a Trace
+
+O visitor log vive em `/guestbook`. Toda nova mensagem entra como `pending` no D1 e só aparece no GET público depois de aprovação. A fila privada fica em `/guestbook/moderate` e reutiliza o login ChatGPT do deploy.
+
+Variáveis necessárias:
+
+```dotenv
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_public_site_key
+TURNSTILE_SECRET_KEY=your_secret_key
+GUESTBOOK_HASH_SECRET=generate_a_long_random_secret
+GUESTBOOK_ADMIN_EMAIL=lucas@example.com
+```
+
+- Crie um widget no Cloudflare Turnstile, adicione os domínios do portfólio e copie as chaves pública e secreta.
+- `GUESTBOOK_HASH_SECRET` é usado apenas para HMAC de IP e user agent; nenhum IP bruto é persistido.
+- `GUESTBOOK_ADMIN_EMAIL` aceita uma lista separada por vírgulas.
+- Para desenvolvimento, as chaves de teste oficiais do Turnstile podem ser usadas.
+
+O schema fica em `db/schema.ts` e a migration versionada em `drizzle/`. Em deploys fora do Sites, aplique as migrations D1 antes de publicar o Worker. Os handlers também criam a tabela e os índices com `IF NOT EXISTS` para manter o ambiente local simples.
 
 ### Publicação no Cloudflare Workers
 
@@ -172,6 +194,7 @@ lucas@tape:~$ help
 lucas@tape:~$ projects
 lucas@tape:~$ music
 lucas@tape:~$ lira
+lucas@tape:~$ guestbook
 lucas@tape:~$ alice
 ```
 
