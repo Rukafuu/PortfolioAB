@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { BlogPost, posts } from "./content/posts";
+import { CodePulse } from "./components/code-pulse";
 
 type Language = "pt" | "en";
 
@@ -767,6 +768,7 @@ export default function Home() {
         <nav aria-label="Navegação principal">
           {!flipped ? <>
             <button onClick={() => scrollTo("projects")}>{language === "pt" ? "Projetos" : "Projects"}</button>
+            <button onClick={() => scrollTo("pulse")}>Code Pulse</button>
             <button onClick={() => scrollTo("lira")}>Lira</button>
             <button onClick={() => scrollTo("resume")}>{language === "pt" ? "Currículo" : "Résumé"}</button>
             <button onClick={() => scrollTo("lab")}>Blog</button>
@@ -941,6 +943,8 @@ export default function Home() {
           <div className="founder-links"><a href="https://waifucorp.org/" target="_blank" rel="noreferrer">WAIFUCORP.ORG ↗</a><a href="https://github.com/thewaifucorp" target="_blank" rel="noreferrer">GITHUB ORG ↗</a></div>
         </div>
       </section>}
+
+      {!flipped && <CodePulse language={language} />}
 
       {!flipped && <section className="lira-section" id="lira">
         <div className="lira-intro">
