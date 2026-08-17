@@ -14,11 +14,18 @@ import { CodePulse } from "./components/code-pulse";
 type Language = "pt" | "en";
 
 function renderInlineCode(text: string) {
-  return text.split(/(`[^`]+`)/g).map((part, index) =>
-    part.startsWith("`") && part.endsWith("`")
-      ? <code key={`${part}-${index}`}>{part.slice(1, -1)}</code>
-      : part,
-  );
+  return text.split(/(`[^`]+`|\[[^\]]+\]\(https?:\/\/[^)]+\))/g).map((part, index) => {
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={`${part}-${index}`}>{part.slice(1, -1)}</code>;
+    }
+
+    const link = part.match(/^\[([^\]]+)\]\((https?:\/\/[^)]+)\)$/);
+    if (link) {
+      return <a key={`${link[2]}-${index}`} href={link[2]} target="_blank" rel="noreferrer">{link[1]}</a>;
+    }
+
+    return part;
+  });
 }
 
 function renderBlogContent(content: string) {
