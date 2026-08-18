@@ -67,10 +67,11 @@ type Workspace = { workspace: { slug: string } };
 type Repository = { slug: string };
 type Commit = { hash: string; date: string; author?: { raw?: string; user?: { nickname?: string; username?: string } } };
 
-async function allBitbucket<T>(url: string, token: string): Promise<T[]> {
+async function allBitbucket<T>(url: string, email: string, token: string): Promise<T[]> {
   const values: T[] = [];
+  const authorization = `Basic ${btoa(`${email}:${token}`)}`;
   for (let next: string | undefined = url; next;) {
-    const response = await fetch(next, { headers: { authorization: `Bearer ${token}`, accept: "application/json" } });
+    const response = await fetch(next, { headers: { authorization, accept: "application/json" } });
     if (!response.ok) throw new Error("Bitbucket unavailable");
     const page = await response.json() as Page<T>;
     values.push(...page.values);
@@ -79,14 +80,14 @@ async function allBitbucket<T>(url: string, token: string): Promise<T[]> {
   return values;
 }
 
-export async function bitbucketContributions(username: string, token: string, emails: string[], range: Range): Promise<Contribution[]> {
+export async function bitbucketContributions(username: string, email: string, token: string, emails: string[], range: Range): Promise<Contribution[]> {
   const aliases = new Set(emails.map((email) => email.trim().toLowerCase()).filter(Boolean));
   const values: Contribution[] = [];
-  const workspaces = await allBitbucket<Workspace>("https://api.bitbucket.org/2.0/user/workspaces", token);
+  const workspaces = await allBitbucket<Workspace>("https://api.bitbucket.org/2.0/user/workspaces", email, token);
   for (const workspace of workspaces) {
     const root = `https://api.bitbucket.org/2.0/repositories/${encodeURIComponent(workspace.workspace.slug)}`;
-    for (const repository of await allBitbucket<Repository>(root, token)) {
-      for (const commit of await allBitbucket<Commit>(`${root}/${encodeURIComponent(repository.slug)}/commits`, token)) {
+    for (const repository of await allBitbucket<Repository>(root, email, token)) {
+      for (const commit of await allBitbucket<Commit>(`${root}/${encodeURIComponent(repository.slug)}/commits`, email, token)) {
         const date = localDate(commit.date);
         if (date < range.from) break;
         const raw = commit.author?.raw?.toLowerCase() ?? "";
