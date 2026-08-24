@@ -2,7 +2,7 @@
 
 ![Lucas Personal OS — C-90 interactive portfolio](public/readme-hero.svg)
 
-[![PLAY PORTFOLIO](https://img.shields.io/badge/▶_PLAY-PORTFOLIO-c7ff3a?style=for-the-badge&labelColor=0b0b0a)](https://lucas-personal-os.reskyume.chatgpt.site)
+[![PLAY PORTFOLIO](https://img.shields.io/badge/▶_PLAY-PORTFOLIO-c7ff3a?style=for-the-badge&labelColor=0b0b0a)]([https://portfolio.lucas-frischeisen.workers.dev/])
 [![SIDE A](https://img.shields.io/badge/SIDE_A-DEV-f2ebdd?style=for-the-badge&labelColor=0b0b0a)](#side-a--dev-system)
 [![SIDE B](https://img.shields.io/badge/SIDE_B-PRODUCER-ff4f73?style=for-the-badge&labelColor=0b0b0a)](#side-b--producer)
 [![STATUS](https://img.shields.io/badge/STATUS-EM_MOVIMENTO-c7ff3a?style=for-the-badge&labelColor=0b0b0a)](https://github.com/Rukafuu/PortfolioAB)
