@@ -2,7 +2,7 @@
 
 ![Lucas Personal OS — C-90 interactive portfolio](public/readme-hero.svg)
 
-[![PLAY PORTFOLIO](https://img.shields.io/badge/▶_PLAY-PORTFOLIO-c7ff3a?style=for-the-badge&labelColor=0b0b0a)]([https://portfolio.lucas-frischeisen.workers.dev/])
+[![PLAY PORTFOLIO](https://img.shields.io/badge/▶_PLAY-PORTFOLIO-c7ff3a?style=for-the-badge&labelColor=0b0b0a)](https://lucas-personal-os.reskyume.chatgpt.site)
 [![SIDE A](https://img.shields.io/badge/SIDE_A-DEV-f2ebdd?style=for-the-badge&labelColor=0b0b0a)](#side-a--dev-system)
 [![SIDE B](https://img.shields.io/badge/SIDE_B-PRODUCER-ff4f73?style=for-the-badge&labelColor=0b0b0a)](#side-b--producer)
 [![STATUS](https://img.shields.io/badge/STATUS-EM_MOVIMENTO-c7ff3a?style=for-the-badge&labelColor=0b0b0a)](https://github.com/Rukafuu/PortfolioAB)
@@ -114,7 +114,7 @@ A faixa principal combina projetos maduros com os sinais mais recentes. O site t
 | `05` | [TimeWarp](https://github.com/Rukafuu/TimeWarp) | Go · replay causal · MCP · debugging seguro |
 | `06` | [ExpoMCP](https://github.com/Rukafuu/ExpoMCP) | Expo · MCP read-only · diagnóstico seguro |
 | `07` | [Tsuma](https://github.com/Rukafuu/tsuma) | Electron · VRM · Three.js · MCP |
-| `08` | [GhostClock](https://github.com/Rukafuu/GhostCLock) | C++ · Win32 · performance reversível |
+| `08` | [GhostClock](https://github.com/Rukafuu/GhostCLock) | C17 · Win32 · performance reversível |
 
 ## SIDE B — PRODUCER
 
