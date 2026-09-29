@@ -951,6 +951,11 @@ export default function Home() {
           </div>
         </div>
         <a className="github-link" href="https://github.com/Rukafuu" target="_blank" rel="noreferrer">VER PERFIL COMPLETO NO GITHUB ↗</a>
+        <div className="upstream-contributions">
+          <div><span>UPSTREAM CONTRIBUTIONS / MERGED</span><strong>{language === "pt" ? "Engenharia aceita fora do próprio repositório." : "Engineering accepted beyond my own repositories."}</strong></div>
+          <p>{language === "pt" ? <>No Laya, construí uma avaliação metamórfica reproduzível para detectar sensibilidade à ordem das opções — com remapeamento canônico, acordo semântico, drift de probabilidade e divergência Jensen-Shannon, sem inventar um threshold universal. No Jaeger UI, uma correção focal de GenAI também foi aceita no upstream.</> : <>In Laya, I built a reproducible metamorphic evaluation for option-order sensitivity — with canonical remapping, semantic agreement, probability drift and Jensen-Shannon divergence, without inventing a universal threshold. A focused GenAI fix was also accepted upstream in Jaeger UI.</>}</p>
+          <div className="upstream-links"><a href="https://github.com/NandhaKishorM/laya/pull/269" target="_blank" rel="noreferrer">LAYA #269 ↗</a><a href="https://github.com/jaegertracing/jaeger-ui/pull/4419" target="_blank" rel="noreferrer">JAEGER UI #4419 ↗</a></div>
+        </div>
         <div className="founder-signal" id="waifucorp">
           <div><span>CO-FOUNDER SIGNAL / 2026</span><strong>wAIfu Corp.</strong></div>
           <p>{language === "pt" ? "Lucas (Rukafuusca) é sócio-fundador da wAIfu Corp — um coletivo de desenvolvedores que transforma experimentos com inteligência artificial em software open source. Entre os projetos estão Above All Graphs, Bastion Core/Agent e DRAGON." : "Lucas (Rukafuusca) is a co-founder of wAIfu Corp — a developer collective turning artificial-intelligence experiments into open-source software. Its projects include Above All Graphs, Bastion Core/Agent and DRAGON."}</p>
